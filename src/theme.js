@@ -8,6 +8,17 @@ const theme = createTheme({
       color: "#ffc9b5",
       fontWeight: "bold",
     },
+    h4: {
+      fontSize: 28,
+      color: "#ffc9b5",
+      fontWeight: "bold",
+    },
+    subtitle1: {
+      fontSize: 16,
+    },
+    body2: {
+      fontSize: 14,
+    },
   },
   palette: {
     primary: {
@@ -29,6 +40,9 @@ const theme = createTheme({
         body: {
           background: "#2e282a",
           color: "#e2fcef",
+        },
+        a: {
+          textDecoration: "none",
         },
       },
     },
