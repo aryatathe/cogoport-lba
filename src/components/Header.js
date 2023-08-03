@@ -39,7 +39,7 @@ const Header = () => {
         <NavButton variant="outlined" component={NavLink} to="/login">
           Login
         </NavButton>
-        <NavButton variant="outlined" component={NavLink} to="/profile">
+        <NavButton variant="outlined" component={NavLink} to="/profile/1">
           Profile
         </NavButton>
       </Stack>
