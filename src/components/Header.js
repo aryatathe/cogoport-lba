@@ -26,7 +26,9 @@ const Header = () => {
       justifyContent="space-between"
       alignItems="center"
     >
-      <Typography variant="h1">BLOGS</Typography>
+      <Typography variant="h1" color="secondary">
+        BLOGS
+      </Typography>
       <Stack direction="row" spacing={1}>
         <NavButton variant="outlined" component={NavLink} to="/">
           Home
@@ -36,6 +38,9 @@ const Header = () => {
         </NavButton>
         <NavButton variant="outlined" component={NavLink} to="/login">
           Login
+        </NavButton>
+        <NavButton variant="outlined" component={NavLink} to="/profile">
+          Profile
         </NavButton>
       </Stack>
     </HeaderContainer>

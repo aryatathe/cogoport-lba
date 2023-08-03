@@ -5,19 +5,31 @@ const theme = createTheme({
     fontFamily: "Verdana, sans-serif",
     h1: {
       fontSize: 64,
-      color: "#ffc9b5",
+      fontWeight: "bold",
+    },
+    h2: {
+      fontSize: 56,
+      fontWeight: "bold",
+    },
+    h3: {
+      fontSize: 28,
       fontWeight: "bold",
     },
     h4: {
-      fontSize: 28,
-      color: "#ffc9b5",
+      fontSize: 24,
       fontWeight: "bold",
     },
     subtitle1: {
       fontSize: 16,
     },
-    body2: {
+    subtitle2: {
       fontSize: 14,
+    },
+    body2: {
+      fontSize: 16,
+    },
+    body2: {
+      fontSize: 12,
     },
   },
   palette: {
@@ -44,6 +56,7 @@ const theme = createTheme({
         a: {
           textDecoration: "none",
         },
+        img: { maxWidth: "100%" },
       },
     },
     MuiButton: {

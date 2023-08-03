@@ -20,7 +20,11 @@ const BlogCardPaper = styled(Paper)({
   "&:hover": {
     transform: "scale(1.05)",
   },
-  "& img": { maxWidth: "100%", borderRadius: "10px", opacity: 0.7 },
+  "& img": {
+    borderRadius: "10px",
+    margin: "5px 0",
+    opacity: 0.7,
+  },
   "&:hover img": {
     opacity: 0.9,
   },
@@ -34,27 +38,36 @@ const BlogCard = ({ data }) => {
     <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
       <NavLink to={`/blog/${data.id}`}>
         <BlogCardPaper elevation={6}>
-          <Typography variant="h4" align="center" color="secondary">
+          <Typography variant="h3" align="center" color="secondary">
             {data.title}
           </Typography>
-          <Typography variant="subtitle1" align="center" color="primary">
-            {data.author}
-          </Typography>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Typography variant="subtitle1" align="center" color="primary">
+              {data.author}
+            </Typography>
+            <Typography variant="subtitle2" align="center" color="primary">
+              {data.date}
+            </Typography>
+          </Stack>
           <Box>
             <img src={data.img} />
           </Box>
 
           <Stack direction="row" alignItems="center">
-            <Typography variant="body2" color="primary">
+            <Typography variant="subtitle2" color="primary">
               {data.topic}
             </Typography>
             <span style={{ flex: 1 }} />
             <FavoriteIcon fontSize="small" color="primary" />
-            <Typography variant="body2" color="primary">
+            <Typography variant="subtitle2" color="primary">
               {data.likes}
             </Typography>
             <VisibilityIcon fontSize="small" color="primary" />
-            <Typography variant="body2" color="primary">
+            <Typography variant="subtitle2" color="primary">
               {data.views}
             </Typography>
           </Stack>
