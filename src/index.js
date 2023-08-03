@@ -3,11 +3,11 @@ import ReactDOM from "react-dom/client";
 
 import { RouterProvider } from "react-router-dom";
 
-import app from "./App";
-
 import { ThemeProvider } from "@mui/material/styles";
 
 import CssBaseline from "@mui/material/CssBaseline";
+
+import app from "./App";
 
 import theme from "./theme";
 
