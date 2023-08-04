@@ -86,7 +86,13 @@ const Blog = () => {
             }}
           >
             <Stack direction="column">
-              <Typography variant="h4" color="secondary">
+              <Typography
+                variant="h4"
+                color="secondary"
+                component={NavLink}
+                to={`/profile/${blog.authorId}`}
+                sx={{ "&:hover": { opacity: 0.6 } }}
+              >
                 {blog.author}
               </Typography>
               <Stack direction="row" spacing={1}>

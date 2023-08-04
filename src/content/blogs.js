@@ -7,6 +7,7 @@ const blogs = [...Array(25).keys()].map((i) => ({
   id: `${i + 1}`,
   title: `Blog ${i + 1} Title`,
   author: `User ${1 + (i % 4)}`,
+  authorId: 1 + (i % 4),
   topic: `Topic ${1 + (i % 5)}`,
   img: tempImage,
   content: loremIpsum,

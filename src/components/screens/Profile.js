@@ -84,7 +84,12 @@ const Profile = () => {
                 <Button variant="outlined" color="secondary">
                   Follow
                 </Button>
-                <Button variant="outlined" color="secondary">
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  component={NavLink}
+                  to="/profile/edit"
+                >
                   Edit
                 </Button>
               </Stack>

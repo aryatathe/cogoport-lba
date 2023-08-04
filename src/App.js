@@ -4,6 +4,7 @@ import Login from "./components/screens/Login";
 import Home from "./components/screens/Home";
 import Blog from "./components/screens/Blog";
 import Profile from "./components/screens/Profile";
+import EditProfile from "./components/screens/EditProfile";
 
 const app = createBrowserRouter([
   {
@@ -18,6 +19,10 @@ const app = createBrowserRouter([
   {
     path: "/blog/:id",
     element: <Blog />,
+  },
+  {
+    path: "/profile/edit",
+    element: <EditProfile />,
   },
   {
     path: "/profile/:id",

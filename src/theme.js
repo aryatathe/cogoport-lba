@@ -59,6 +59,9 @@ const theme = createTheme({
         img: { width: "100%", transition: "all 0.2s ease" },
       },
     },
+    MuiTypography: {
+      styleOverrides: { root: { transition: "all 0.2s ease" } },
+    },
     MuiButton: {
       styleOverrides: { root: { textTransform: "none" } },
     },
