@@ -3,6 +3,8 @@ import { NavLink } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
 
 import { styled } from "@mui/material/styles";
 
@@ -19,6 +21,7 @@ const Home = () => {
   return (
     <>
       <Header />
+      <Grid container></Grid>
       <BlogContainer container spacing={4}>
         {blogs.map((blog, i) => {
           return (

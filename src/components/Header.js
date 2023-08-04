@@ -39,10 +39,7 @@ const Header = () => {
           +
         </NavButton>
         <NavButton variant="outlined" component={NavLink} to="/">
-          Home
-        </NavButton>
-        <NavButton variant="outlined" component={NavLink} to="/topics">
-          Topics
+          Browse
         </NavButton>
         <NavButton variant="outlined" component={NavLink} to="/login">
           Login

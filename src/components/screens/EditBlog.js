@@ -32,6 +32,26 @@ const Editor = styled(Stack)({
   padding: "0 20px",
 });
 
+const ImageBox = styled(Box)({
+  position: "relative",
+  borderRadius: "5px",
+  overflow: "hidden",
+  aspectRatio: "16/9",
+  "& .MuiStack-root": {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+    background: "#2e282acc",
+    opacity: 0,
+    transition: "all 0.2s ease",
+    "&:hover": {
+      opacity: 1,
+    },
+  },
+});
+
 const CustomIconButton = styled(IconButton)({
   transition: "all 0.2s ease",
   "&:hover": {
@@ -70,6 +90,14 @@ const EditBlog = () => {
           <Typography variant="h2" align="center" color="primary">
             Create Blog
           </Typography>
+          <ImageBox>
+            <img src={tempImage}></img>
+            <Stack alignItems="center" justifyContent="center">
+              <Button variant="contained" color="secondary">
+                Upload Image
+              </Button>
+            </Stack>
+          </ImageBox>
           <TextField label="Title" variant="outlined" multiline />
           <TextField label="Write Post" variant="outlined" multiline rows={3} />
           <Stack
