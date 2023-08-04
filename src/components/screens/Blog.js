@@ -42,7 +42,6 @@ const CustomIconButton = styled(IconButton)({
 
 const Blog = () => {
   const [blog, setBlog] = useState({ loading: true });
-  console.log(blog.content);
 
   const id = useParams().id;
   useEffect(() => {

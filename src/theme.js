@@ -56,11 +56,22 @@ const theme = createTheme({
         a: {
           textDecoration: "none",
         },
-        img: { maxWidth: "100%" },
+        img: { width: "100%", transition: "all 0.2s ease" },
       },
     },
     MuiButton: {
       styleOverrides: { root: { textTransform: "none" } },
+    },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          transition: "all 0.2s ease",
+          "&:not(.Mui-selected)": { color: "#ffc9b5" },
+          "&:not(.Mui-selected):hover": {
+            opacity: 0.6,
+          },
+        },
+      },
     },
   },
 });

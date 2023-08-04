@@ -33,9 +33,9 @@ const BlogCardPaper = styled(Paper)({
   },
 });
 
-const BlogCard = ({ data }) => {
+const BlogCard = ({ data, xs, sm, md, lg, xl }) => {
   return (
-    <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
+    <Grid item xs={xs} sm={sm} md={md} lg={lg} xl={xl}>
       <NavLink to={`/blog/${data.id}`}>
         <BlogCardPaper elevation={6}>
           <Typography variant="h3" align="center" color="secondary">

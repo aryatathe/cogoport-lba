@@ -41,11 +41,10 @@ const Login = () => {
         centered
         sx={{
           marginTop: "50px",
-          "& .MuiTab-root:not(.Mui-selected)": { color: "#ffc9b5" },
         }}
       >
-        <Tab label="Login" value={0} />
-        <Tab label="SignUp" value={1} />
+        <Tab label="Login" value={0} disableRipple />
+        <Tab label="SignUp" value={1} disableRipple />
       </Tabs>
       <Stack
         direction="column"

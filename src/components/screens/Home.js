@@ -21,7 +21,9 @@ const Home = () => {
       <Header />
       <BlogContainer container spacing={4}>
         {blogs.map((blog, i) => {
-          return <BlogCard key={i} data={blog} />;
+          return (
+            <BlogCard key={i} data={blog} xs={12} sm={6} md={4} lg={3} xl={2} />
+          );
         })}
       </BlogContainer>
     </>
