@@ -91,4 +91,124 @@ class PostsController < ApplicationController
         render json: {msg: "Post successfully updated!", status: 200}
         return
     end
+
+    def ViewMyPosts
+        response = AuthenticateUser(params)
+        user = nil
+        if response[:status] != 200
+            render json: response
+            return
+        else
+            user = response[:user]
+        end
+
+        posts = user.posts
+        ser_posts = ActiveModelSerializers::SerializableResource.new(posts, each_serializer: ViewMyPostsSerializer).as_json
+
+        render json: {posts: ser_posts, status: 200}
+        return
+    end
+
+    def GetPost
+        response = AuthenticateUser(params)
+        user = nil
+        if response[:status] != 200
+            render json: response
+            return
+        else
+            user = response[:user]
+        end
+
+        if !params[:post_id]
+            render json: {msg: "Parameter is missing!", status: 404}
+            return
+        end
+        begin
+            post = Post.find(params[:post_id])
+        rescue
+            render json: {msg: "Post id is Invalid!", status: 400}
+            return
+        end
+
+        if (post.user_id != user.id)
+            #Check for payment else return error
+            post.views_count = post.views_count+1
+            post.save
+            #Algorithm to calculate popularity of particular post to be in top posts
+            post.popularity_metric = post.views_count * 1 + post.likes_count * 3 + post.comments_count * 2
+        end
+
+        ser_post = ActiveModelSerializers::SerializableResource.new(post, each_serializer: ViewPostSerializerSerializer).as_json
+        render json: {post: ser_post, status: 200}
+        return
+    end
+
+    def DeletePost
+        response = AuthenticateUser(params)
+        user = nil
+        if response[:status] != 200
+            render json: response
+            return
+        else
+            user = response[:user]
+        end
+
+        if !params[:post_id]
+            render json: {msg: "Parameter is missing!", status: 404}
+            return
+        end
+        begin
+            post = Post.find(params[:post_id])
+        rescue
+            render json: {msg: "Post id is Invalid!", status: 400}
+            return
+        end
+
+        if (post.user_id != user.id)
+            render json: {msg: "You are not authorized to delete this post!", status: 403}
+            return
+        end
+
+        post.destroy
+        render json: {msg: "Post successfully deleted!", status: 200}
+        return
+    end
+
+    def ViewPosts
+        response = AuthenticateUser(params)
+        user = nil
+        if response[:status] != 200
+            render json: response
+            return
+        else
+            user = response[:user]
+        end
+        #Level 4 remaining
+        author = params[:author]
+        start_date = params[:start_date]
+        end_date = params[:end_date]
+        sort_by_likes = params[:sort_by_likes]
+        sort_by_comments = params[:sort_by_comments]
+
+        posts = Post.all
+        if author
+            posts = Post.joins(:user).where("users.username LIKE ?", "%#{author}%")
+        end
+
+        if start_date && end_date
+            posts = posts.where(created_at: params[:start_date]..params[:end_date])
+        end
+
+        if sort_by_comments
+            posts = posts.order(comments_count)
+        end
+
+        if sort_by_likes == "true"
+            posts = posts.order(likes_count: :desc)
+        end
+
+        ser_posts = ActiveModelSerializers::SerializableResource.new(posts, each_serializer: ViewMyPostsSerializer).as_json
+        render json: {posts: ser_posts, status: 200}
+        return
+    end
 end

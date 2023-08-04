@@ -7,6 +7,15 @@ Rails.application.routes.draw do
   post "/sign-up", to: "users#SignUp"
   post "/edit-user-details", to: "users#EditUserDetails"
   post "/change-password", to: "users#ChangePassword"
+
   post "/create-post", to: "posts#CreatePost"
   put "/update-post", to: "posts#UpdatePost"
+  get "/view-my-posts", to: "posts#ViewMyPosts"
+  get "/view-posts", to: "posts#ViewPosts"
+  get "/get-post", to: "posts#GetPost"
+  delete "/delete-post", to: "posts#DeletePost"
+
+  get "/search-authors", to: "filters#SearchAuthors"
+  get "/search-topics", to: "filters#SearchTopics"
+  get "/search-posts", to: "filters#SearchPosts"
 end

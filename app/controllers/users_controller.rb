@@ -6,17 +6,11 @@ class UsersController < ApplicationController
 
     def Login
         email = params[:email]
-        password = [:password]
+        password = params[:password]
         user = User.find_by(email: email)
-        if !user
-            render json: {msg: "User not found!", status: 404}
-            return
-        end
-        
-        encrypted_password = BCrypt::Password.create(password)
-        stored_password = BCrypt::Password.new(encrypted_password)
-        if stored_password == user.password
-            render json: {msg: "Password is incorrect!", status: 403}
+
+        if !(user && user.authenticate(password))
+            render json: {msg: "Either email or password is wrong!", status: 404}
             return
         end
 
@@ -49,9 +43,10 @@ class UsersController < ApplicationController
             return
         end
 
-        encrypted_password = BCrypt::Password.create(password)
+        user = User.create(email: email, password: password)
         token = SecureRandom.uuid
-        user = User.create(email: email, password: encrypted_password, token: token)
+        user.token = token
+        user.save
 
         userDetails = ActiveModelSerializers::SerializableResource.new(user, each_serializer: UserLoginSerializer).as_json
         response = {
@@ -94,7 +89,7 @@ class UsersController < ApplicationController
         end
 
         user.save
-        render json: {msg: "User details are successfully updated!", status: 200, profile_pic: url_for(user.profile_pic)}
+        render json: {msg: "User details are successfully updated!", status: 200}
         return
     end
 
@@ -113,7 +108,7 @@ class UsersController < ApplicationController
             return
         end
 
-        user.password = encrypted_password = BCrypt::Password.create(params[:password])
+        user.password = params[:password]
         user.save
 
         render json: {msg: "Password successfully updated!", status: 200}
