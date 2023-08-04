@@ -1,13 +1,10 @@
 import { useState } from "react";
 
 import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-
-import { styled } from "@mui/material/styles";
 
 import Header from "../Header";
 
@@ -37,8 +34,7 @@ const Login = () => {
         spacing={1}
         sx={{ marginTop: "40px" }}
       >
-        {tab && <TextField label="Email" variant="standard" />}
-        <TextField label="Username" variant="standard" />
+        <TextField label="Email" variant="standard" />
         <TextField label="Password" variant="standard" />
         {tab && <TextField label="Confirm Password" variant="standard" />}
         <Button

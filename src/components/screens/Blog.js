@@ -3,17 +3,11 @@ import { NavLink, useParams } from "react-router-dom";
 
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import FavoriteIcon from "@mui/icons-material/Favorite";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
-import BookmarkIcon from "@mui/icons-material/Bookmark";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 
 import { styled } from "@mui/material/styles";
 
@@ -29,13 +23,6 @@ const BlogContainer = styled(Box)({
   "& #blog-image": { margin: "20px auto", maxWidth: "800px" },
   "& .para": {
     margin: "15px 0",
-  },
-});
-
-const CustomIconButton = styled(IconButton)({
-  transition: "all 0.2s ease",
-  "&:hover": {
-    transform: "scale(1.1)",
   },
 });
 
@@ -104,12 +91,12 @@ const Blog = () => {
             <Typography variant="body2" sx={{ marginLeft: "10px" }}>
               {blog.likes}
             </Typography>
-            <CustomIconButton disableRipple>
+            <IconButton disableRipple>
               <FavoriteBorderIcon fontSize="large" color="secondary" />
-            </CustomIconButton>
-            <CustomIconButton disableRipple>
+            </IconButton>
+            <IconButton disableRipple>
               <BookmarkBorderIcon fontSize="large" color="secondary" />
-            </CustomIconButton>
+            </IconButton>
           </Stack>
         </BlogContainer>
       )}

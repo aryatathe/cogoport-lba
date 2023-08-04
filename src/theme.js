@@ -66,6 +66,16 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: { root: { textTransform: "none" } },
     },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          transition: "all 0.2s ease",
+          "&:hover": {
+            transform: "scale(1.1)",
+          },
+        },
+      },
+    },
     MuiTab: {
       styleOverrides: {
         root: {
@@ -109,6 +119,38 @@ const theme = createTheme({
         },
         clearIndicator: {
           color: "#ffc9b599",
+        },
+      },
+    },
+    MuiDrawer: {
+      styleOverrides: {
+        paper: {
+          background: "#2e282a",
+          color: "inherit",
+        },
+      },
+    },
+    MuiAccordion: {
+      styleOverrides: {
+        root: {
+          background: "#00000022",
+          color: "inherit",
+          "&.Mui-expanded": {
+            margin: 0,
+            marginTop: "8px !important",
+          },
+        },
+      },
+    },
+    MuiAccordionSummary: {
+      styleOverrides: {
+        root: {
+          "&.Mui-expanded": {
+            minHeight: 0,
+          },
+        },
+        content: {
+          "&.Mui-expanded": { margin: "12px 0" },
         },
       },
     },

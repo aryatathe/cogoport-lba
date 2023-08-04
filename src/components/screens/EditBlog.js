@@ -1,21 +1,13 @@
 import { useState, useEffect } from "react";
-import { NavLink, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Autocomplete from "@mui/material/Autocomplete";
-
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
-import BookmarkIcon from "@mui/icons-material/Bookmark";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 
 import { styled } from "@mui/material/styles";
 
@@ -49,13 +41,6 @@ const ImageBox = styled(Box)({
     "&:hover": {
       opacity: 1,
     },
-  },
-});
-
-const CustomIconButton = styled(IconButton)({
-  transition: "all 0.2s ease",
-  "&:hover": {
-    transform: "scale(1.1)",
   },
 });
 

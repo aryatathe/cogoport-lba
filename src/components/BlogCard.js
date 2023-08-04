@@ -2,13 +2,13 @@ import { NavLink } from "react-router-dom";
 
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import CommentIcon from "@mui/icons-material/Comment";
 
 import { styled } from "@mui/material/styles";
 
@@ -29,7 +29,7 @@ const BlogCardPaper = styled(Paper)({
     opacity: 0.9,
   },
   "& .MuiSvgIcon-root": {
-    marginLeft: "10px",
+    margin: "0 3px 0 12px",
   },
 });
 
@@ -40,6 +40,9 @@ const BlogCard = ({ data, xs, sm, md, lg, xl }) => {
         <BlogCardPaper elevation={6}>
           <Typography variant="h3" align="center" color="secondary">
             {data.title}
+          </Typography>
+          <Typography variant="body2" align="center" color="primary">
+            {data.topic}
           </Typography>
           <Stack
             direction="row"
@@ -57,11 +60,11 @@ const BlogCard = ({ data, xs, sm, md, lg, xl }) => {
             <img src={data.img} />
           </Box>
 
-          <Stack direction="row" alignItems="center">
+          <Stack direction="row" justifyContent="center" alignItems="center">
+            <CommentIcon fontSize="small" color="primary" />
             <Typography variant="subtitle2" color="primary">
-              {data.topic}
+              {data.likes}
             </Typography>
-            <span style={{ flex: 1 }} />
             <FavoriteIcon fontSize="small" color="primary" />
             <Typography variant="subtitle2" color="primary">
               {data.likes}
