@@ -21,4 +21,8 @@ Rails.application.routes.draw do
   get "/search-posts", to: "filters#SearchPosts"
 
   post "/like-post", to: "like_comment_follow#LikePost"
+  post "/unlike-post", to: "like_comment_follow#UnLikePost"
+  post "/add-comment", to: "like_comment_follow#AddComment"
+  post "/delete-comment", to: "like_comment_follow#DeleteComment"
+  post "/follow-user", to: "like_comment_follow#Follow"
 end

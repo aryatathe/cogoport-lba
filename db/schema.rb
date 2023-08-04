@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_04_125203) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_04_155202) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -77,13 +77,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_04_125203) do
     t.integer "post_id", null: false
   end
 
-  create_table "topic_recommendations", force: :cascade do |t|
+  create_table "topicrecommendations", force: :cascade do |t|
     t.string "name"
     t.integer "recommendation_score"
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_topic_recommendations_on_user_id"
+    t.index ["user_id"], name: "index_topicrecommendations_on_user_id"
   end
 
   create_table "topics", force: :cascade do |t|
@@ -117,6 +117,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_04_125203) do
   add_foreign_key "likesjunctions", "posts"
   add_foreign_key "likesjunctions", "users"
   add_foreign_key "posts", "users"
-  add_foreign_key "topic_recommendations", "users"
+  add_foreign_key "topicrecommendations", "users"
   add_foreign_key "users", "users", column: "following_id"
 end
