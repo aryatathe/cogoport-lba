@@ -30,6 +30,14 @@ const Header = () => {
         BLOGS
       </Typography>
       <Stack direction="row" spacing={1}>
+        <NavButton
+          variant="contained"
+          color="secondary"
+          component={NavLink}
+          to="/edit/new"
+        >
+          +
+        </NavButton>
         <NavButton variant="outlined" component={NavLink} to="/">
           Home
         </NavButton>

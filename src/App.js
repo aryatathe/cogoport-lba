@@ -5,6 +5,7 @@ import Home from "./components/screens/Home";
 import Blog from "./components/screens/Blog";
 import Profile from "./components/screens/Profile";
 import EditProfile from "./components/screens/EditProfile";
+import EditBlog from "./components/screens/EditBlog";
 
 const app = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ const app = createBrowserRouter([
   {
     path: "/profile/:id",
     element: <Profile />,
+  },
+  {
+    path: "/edit/:id",
+    element: <EditBlog />,
   },
 ]);
 

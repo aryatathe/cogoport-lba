@@ -20,7 +20,6 @@ import { styled } from "@mui/material/styles";
 import Header from "../Header";
 
 import blogs from "../../content/blogs";
-import { MarginRounded } from "@mui/icons-material";
 
 const BlogContainer = styled(Box)({
   maxWidth: "800px",

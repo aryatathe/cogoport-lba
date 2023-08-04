@@ -50,6 +50,7 @@ const theme = createTheme({
     MuiCssBaseline: {
       styleOverrides: {
         body: {
+          colorScheme: "dark",
           background: "#2e282a",
           color: "#e2fcef",
         },
@@ -73,6 +74,41 @@ const theme = createTheme({
           "&:not(.Mui-selected):hover": {
             opacity: 0.6,
           },
+        },
+      },
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          "& label": {
+            color: "#ffc9b599",
+          },
+          "& .MuiInputBase-root": {
+            color: "#e3fcef",
+          },
+          "& .MuiInputBase-root::before, & fieldset": {
+            borderColor: "#ffc9b599 !important",
+          },
+          "& .MuiInputBase-root:hover::before, & .MuiInputBase-root:hover fieldset":
+            {
+              borderColor: "#ffc9b5 !important",
+            },
+          "& .MuiInputBase-root.Mui-focused fieldset": {
+            borderColor: "#e3fcef !important",
+          },
+        },
+      },
+    },
+    MuiAutocomplete: {
+      styleOverrides: {
+        popper: {
+          background: "green",
+        },
+        popupIndicator: {
+          color: "#ffc9b599",
+        },
+        clearIndicator: {
+          color: "#ffc9b599",
         },
       },
     },

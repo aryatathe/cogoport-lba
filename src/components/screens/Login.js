@@ -11,21 +11,6 @@ import { styled } from "@mui/material/styles";
 
 import Header from "../Header";
 
-const LoginInput = styled(TextField)({
-  "& label": {
-    color: "#ffc9b599",
-  },
-  "& .MuiInputBase-root": {
-    color: "#e3fcef",
-  },
-  "& .MuiInputBase-root::before": {
-    borderColor: "#ffc9b599 !important",
-  },
-  "& .MuiInputBase-root:hover::before": {
-    borderColor: "#ffc9b5 !important",
-  },
-});
-
 const Login = () => {
   const [tab, setTab] = useState(false);
   return (
@@ -52,10 +37,10 @@ const Login = () => {
         spacing={1}
         sx={{ marginTop: "40px" }}
       >
-        {tab && <LoginInput label="Email" variant="standard" />}
-        <LoginInput label="Username" variant="standard" />
-        <LoginInput label="Password" variant="standard" />
-        {tab && <LoginInput label="Confirm Password" variant="standard" />}
+        {tab && <TextField label="Email" variant="standard" />}
+        <TextField label="Username" variant="standard" />
+        <TextField label="Password" variant="standard" />
+        {tab && <TextField label="Confirm Password" variant="standard" />}
         <Button
           variant="contained"
           color="secondary"
