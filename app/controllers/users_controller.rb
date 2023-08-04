@@ -2,26 +2,7 @@ require 'bcrypt'
 
 class UsersController < ApplicationController
     skip_before_action :verify_authenticity_token
-    
-    def AuthenticateUser(params)
-        response = {}
-        if !(params[:token])
-            response[:msg] = 'Missing or invalid user token'
-            response[:status] = 400 
-            return response
-        end
-
-        user = User.find_by(token: params[:token])
-        
-        if user
-            response[:user] = user
-            response[:status] = 200
-        else
-            response[:msg] = "Either Token is invalid or expired!"
-            response[:status] = 400
-        end
-        return response
-    end
+    include AuthenticationHelper
 
     def Login
         email = params[:email]
@@ -109,11 +90,11 @@ class UsersController < ApplicationController
         end
 
         if profile_pic
-            #Pending
+            user.profile_pic.attach(params[:profile_pic])
         end
 
         user.save
-        render json: {msg: "User details are successfully updated!", status: 200}
+        render json: {msg: "User details are successfully updated!", status: 200, profile_pic: url_for(user.profile_pic)}
         return
     end
 

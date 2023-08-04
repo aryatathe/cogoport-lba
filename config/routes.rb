@@ -7,4 +7,6 @@ Rails.application.routes.draw do
   post "/sign-up", to: "users#SignUp"
   post "/edit-user-details", to: "users#EditUserDetails"
   post "/change-password", to: "users#ChangePassword"
+  post "/create-post", to: "posts#CreatePost"
+  put "/update-post", to: "posts#UpdatePost"
 end
