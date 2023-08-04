@@ -19,4 +19,6 @@ Rails.application.routes.draw do
   get "/search-authors", to: "filters#SearchAuthors"
   get "/search-topics", to: "filters#SearchTopics"
   get "/search-posts", to: "filters#SearchPosts"
+
+  post "/like-post", to: "like_comment_follow#LikePost"
 end
