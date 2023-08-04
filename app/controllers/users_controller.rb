@@ -114,4 +114,29 @@ class UsersController < ApplicationController
         render json: {msg: "Password successfully updated!", status: 200}
         return
     end
+
+    def ViewProfile
+        response = AuthenticateUser(params)
+        if response[:status] != 200
+            render json: response
+            return
+        end
+
+        user_id = params[:user_id]
+        if !user_id
+            render json: {msg: "User id is missing!", status: 404}
+            return
+        end
+
+        begin
+            user = User.find(user_id)
+        rescue
+            render json: {msg: "User is Invalid!", status: 400}
+            return
+        end
+
+        ser_data = ActiveModelSerializers::SerializableResource.new(user, each_serializer: UserDetailsSerializer).as_json
+        render json: {profile: ser_data, status: 200}
+        return
+    end
 end

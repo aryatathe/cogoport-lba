@@ -1,0 +1,2 @@
+module LikeCommentFollowHelper
+end
