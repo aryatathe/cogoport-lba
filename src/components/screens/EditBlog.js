@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
@@ -12,11 +13,27 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { styled } from "@mui/material/styles";
 
 import Header from "../Header";
+import ErrorBox from "../ErrorBox";
 
 import blogs from "../../content/blogs";
 import topics from "../../content/topics";
 
 import tempImage from "../../images/blog-temp.jpg";
+
+const convertBase64 = (file) => {
+  return new Promise((resolve, reject) => {
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(file);
+
+    fileReader.onload = () => {
+      resolve(fileReader.result);
+    };
+
+    fileReader.onerror = (error) => {
+      reject(error);
+    };
+  });
+};
 
 const Editor = styled(Stack)({
   maxWidth: "800px",
@@ -46,45 +63,99 @@ const ImageBox = styled(Box)({
 
 const EditBlog = () => {
   const [blog, setBlog] = useState({ loading: true });
+  const [img, setImg] = useState(tempImage);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [topic, setTopic] = useState("");
+
+  console.log(img);
+
+  const loggedIn = useSelector((state) => state.isLoggedIn);
+  const myId = useSelector((state) => state.id);
+  const dispatch = useDispatch();
 
   const id = useParams().id;
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (id == "new") {
       setBlog({});
       return;
     }
-    let flag = true;
-    blogs.forEach((blogItem) => {
-      if (blogItem.id == id) {
-        setBlog(blogItem);
-        flag = false;
-      }
-    });
-    if (flag) setBlog({ error: true });
+    setBlog({ loading: true });
+    fetch(`${process.env.REACT_APP_API_URL}/articles/${id}`, {
+      method: "get",
+      headers: new Headers({
+        "ngrok-skip-browser-warning": "69420",
+      }),
+    })
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          console.log(result);
+          setBlog(result);
+        },
+        (error) => {
+          console.log(error);
+          setBlog({ error: true });
+        }
+      );
   }, []);
+
+  useEffect(() => {
+    if (blog.loading || blog.error || id == "new") return;
+    console.log(blog.author_id, myId);
+    if (blog.author_id != myId) navigate(`/profile/${myId}`);
+    setTitle(blog.title);
+    setContent(blog.description);
+    setTopic(blog.topic);
+  }, [blog]);
 
   return (
     <>
       <Header />
-      {blog.loading ? (
-        <div>Loading</div>
-      ) : blog.error ? (
-        <div>Error</div>
+      {blog.loading || blog.error ? (
+        <ErrorBox
+          message={blogs.loading ? "Loading..." : "Couldn't load blog"}
+        />
       ) : (
         <Editor direction="column" alignItems="stretch" spacing={2}>
           <Typography variant="h2" align="center" color="primary">
-            Create Blog
+            {id == "new" ? "Create" : "Edit"} Blog
           </Typography>
           <ImageBox>
-            <img src={tempImage}></img>
+            <img src={img}></img>
             <Stack alignItems="center" justifyContent="center">
-              <Button variant="contained" color="secondary">
+              <Button variant="contained" color="secondary" component="label">
                 Upload Image
+                <input
+                  type="file"
+                  hidden
+                  onChange={async (e) => {
+                    const file = e.target.files[0];
+                    console.log(URL.createObjectURL(file));
+                    const base64 = await convertBase64(file);
+                    setImg(base64);
+                  }}
+                />
               </Button>
             </Stack>
           </ImageBox>
-          <TextField label="Title" variant="outlined" multiline />
-          <TextField label="Write Post" variant="outlined" multiline rows={3} />
+          <TextField
+            value={title}
+            label="Title"
+            variant="outlined"
+            multiline
+            onChange={(e) => setTitle(e.target.value)}
+          />
+          <TextField
+            value={content}
+            label="Write Post"
+            variant="outlined"
+            multiline
+            rows={3}
+            onChange={(e) => setContent(e.target.value)}
+          />
           <Stack
             fullWidth
             direction="row"
@@ -92,12 +163,14 @@ const EditBlog = () => {
             spacing={2}
           >
             <Autocomplete
+              value={topic}
               disablePortal
               options={topics}
               renderInput={(params) => (
                 <TextField {...params} fullWidth label="Topic" />
               )}
               sx={{ flex: 1 }}
+              onChange={(e) => setTopic(e.target.value)}
             />
             <Button variant="contained" color="secondary">
               Post

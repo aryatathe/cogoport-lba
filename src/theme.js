@@ -75,7 +75,19 @@ const theme = createTheme({
         a: {
           textDecoration: "none",
         },
-        img: { width: "100%", transition: "all 0.2s ease" },
+        img: {
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          transition: "all 0.2s ease",
+        },
+        "#placeholderImage": {
+          position: "absolute",
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+        },
       },
     },
     MuiTypography: {

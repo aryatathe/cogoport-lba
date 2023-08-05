@@ -44,7 +44,7 @@ const NavButtons = () => {
         variant="contained"
         color="secondary"
         component={NavLink}
-        to="/edit/new"
+        to="/editor/new"
       >
         <CreateIcon fontSize="large" color="#2b282a" />
       </NavButton>

@@ -30,7 +30,7 @@ const app = createBrowserRouter([
     element: <Profile />,
   },
   {
-    path: "/edit/:id",
+    path: "/editor/:id",
     element: <EditBlog />,
   },
 ]);

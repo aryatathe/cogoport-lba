@@ -17,20 +17,23 @@ import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import Header from "../Header";
 import BlogCard from "../BlogCard";
 import FilterArea from "../FilterArea";
+import ErrorBox from "../ErrorBox";
 
-import blogs from "../../content/blogs";
 import topics from "../../content/topics";
 
 const Home = () => {
   const [filterToggle, setFilterToggle] = useState(false);
-  const theme = useTheme();
-  const sm = useMediaQuery(theme.breakpoints.down("sm"));
-  const md = useMediaQuery(theme.breakpoints.down("md"));
+  const [blogs, setBlogs] = useState({ loading: true });
 
   const state = useSelector((state) => state);
   console.log(state);
 
+  const theme = useTheme();
+  const sm = useMediaQuery(theme.breakpoints.down("sm"));
+  const md = useMediaQuery(theme.breakpoints.down("md"));
+
   useEffect(() => {
+    setBlogs({ loading: true });
     fetch(`${process.env.REACT_APP_API_URL}/articles`, {
       method: "get",
       headers: new Headers({
@@ -41,9 +44,11 @@ const Home = () => {
       .then(
         (result) => {
           console.log(result);
+          setBlogs(result);
         },
         (error) => {
           console.log(error);
+          setBlogs({ error: true });
         }
       );
   }, []);
@@ -80,17 +85,31 @@ const Home = () => {
           close={() => setFilterToggle(false)}
         />
       </Stack>
-      <Grid
-        container
-        spacing={sm ? 2 : md ? 3 : 4}
-        sx={{ padding: md ? "20px" : "30px" }}
-      >
-        {blogs.map((blog, i) => {
-          return (
-            <BlogCard key={i} data={blog} xs={12} sm={6} md={4} lg={3} xl={2} />
-          );
-        })}
-      </Grid>
+      {blogs.loading || blogs.error ? (
+        <ErrorBox
+          message={blogs.loading ? "Loading..." : "Couldn't load blogs"}
+        />
+      ) : (
+        <Grid
+          container
+          spacing={sm ? 2 : md ? 3 : 4}
+          sx={{ padding: md ? "20px" : "30px" }}
+        >
+          {blogs.map((blog, i) => {
+            return (
+              <BlogCard
+                key={i}
+                data={blog}
+                xs={12}
+                sm={6}
+                md={4}
+                lg={3}
+                xl={2}
+              />
+            );
+          })}
+        </Grid>
+      )}
     </>
   );
 };

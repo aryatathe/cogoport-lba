@@ -14,6 +14,7 @@ import { styled } from "@mui/material/styles";
 
 import Header from "../Header";
 import BlogCard from "../BlogCard";
+import ErrorBox from "../ErrorBox";
 
 //import blogs from "../../content/blogs";
 import users from "../../content/users";
@@ -40,6 +41,7 @@ const Profile = () => {
   const [blogs, setBlogs] = useState({ loading: true });
   const [tab, setTab] = useState(0);
 
+  const authToken = useSelector((state) => state.token);
   const myId = useSelector((state) => state.id);
   const dispatch = useDispatch();
 
@@ -50,21 +52,26 @@ const Profile = () => {
       method: "get",
       headers: new Headers({
         "ngrok-skip-browser-warning": "69420",
+        Authorization: `Bearer ${authToken}`,
       }),
     })
       .then((res) => res.json())
       .then(
         (result) => {
           console.log(result);
-          setUser({
-            id: id,
-            name: result.name,
-            email: result.email,
-            about: users[0].about,
-            followers: result.follower_count,
-            following: result.following_count,
-            img: users[0].img,
-          });
+          setUser(
+            result.error
+              ? { error: true }
+              : {
+                  id: id,
+                  name: result.name,
+                  email: result.email,
+                  about: users[0].about,
+                  followers: result.follower_count,
+                  following: result.following_count,
+                  img: users[0].img,
+                }
+          );
         },
         (error) => {
           console.log(error);
@@ -97,10 +104,10 @@ const Profile = () => {
   return (
     <>
       <Header />
-      {user.loading ? (
-        <div>loading</div>
-      ) : user.error ? (
-        <div>error</div>
+      {user.loading || user.error ? (
+        <ErrorBox
+          message={user.loading ? "Loading..." : "Couldn't load user"}
+        />
       ) : (
         <Grid container>
           <Grid item xs={12} sm={4} lg={3} xl={2}>

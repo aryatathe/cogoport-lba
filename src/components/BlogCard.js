@@ -12,17 +12,24 @@ import CommentIcon from "@mui/icons-material/Comment";
 
 import { styled } from "@mui/material/styles";
 
+import tempImage from "../images/blog-temp.jpg";
+
 const BlogCardPaper = styled(Paper)({
   padding: "10px",
   borderRadius: "10px",
   background: "#433e3f",
   transition: "all 0.2s ease",
+  "& #image-box": {
+    width: "100%",
+    margin: "5px 0",
+    aspectRatio: "16/9",
+    position: "relative",
+  },
   "&:hover": {
     transform: "scale(1.05)",
   },
   "& img": {
     borderRadius: "10px",
-    margin: "5px 0",
     opacity: 0.7,
   },
   "&:hover img": {
@@ -55,28 +62,29 @@ const BlogCard = ({ data, xs, sm, md, lg, xl }) => {
             alignItems="center"
           >
             <Typography variant="subtitle1" align="center" color="primary">
-              {data.author}
+              {data.author_name}
             </Typography>
             <Typography variant="subtitle2" align="center" color="primary">
-              {data.date}
+              {data.created_at.slice(2, 10).replaceAll("-", "/")}
             </Typography>
           </Stack>
-          <Box>
-            <img src={data.img} />
+          <Box id="image-box">
+            <img id="placeholderImage" src={tempImage} />
+            <img src={data.image_url} />
           </Box>
 
           <Stack direction="row" justifyContent="center" alignItems="center">
             <CommentIcon fontSize="small" color="primary" />
             <Typography variant="subtitle2" color="primary">
-              {data.likes}
+              {data.comments_count}
             </Typography>
             <FavoriteIcon fontSize="small" color="primary" />
             <Typography variant="subtitle2" color="primary">
-              {data.likes}
+              {data.likes_count}
             </Typography>
             <VisibilityIcon fontSize="small" color="primary" />
             <Typography variant="subtitle2" color="primary">
-              {data.views}
+              {data.views_count}
             </Typography>
           </Stack>
         </BlogCardPaper>
