@@ -27,4 +27,5 @@ Rails.application.routes.draw do
   post "/follow-user", to: "like_comment_follow#Follow"
 
   get "/get-top-posts", to: "top_and_recommendated_post#TopPosts"
+  get "/get-recommendations", to: "top_and_recommendated_post#GetRecommendedPosts"
 end

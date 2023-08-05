@@ -24,9 +24,24 @@ class TopAndRecommendatedPostController < ApplicationController
         else
             user = response[:user]
         end
+        recommendations = []
+        topTopicRecommendations = Topicrecommendation.where(user_id: user.id).order(popularity_metric: :desc).limit(5)
+        for topTopic in topTopicRecommendations
+            topTopicName = topTopic[:name]
+            topicObj = Topic.find_by(name: topTopicName)
+            allPosts = topicObj.posts
+            recommededPost = allPosts.order(popularity_metric: :desc).first
+            ser_data = ActiveModelSerializers::SerializableResource.new(recommededPost, each_serializer: ViewPostSerializerSerializer).as_json
+            recommendations.push(ser_data)
+        end
 
-        topTopicRecommendations = Topicrecommendation.where(user_id: user.id).limit(5)
-        render json: topTopicRecommendations
+        top_posts = Post.order(popularity_metric: :desc).limit(10)
+        ser_top_posts = ActiveModelSerializers::SerializableResource.new(top_posts, each_serializer: ViewPostSerializerSerializer).as_json
+
+        finalRecommendations = (ser_top_posts.to_a + ser_top_posts.to_a).uniq
+
+        render json: {recommendations: finalRecommendations, status: 200}
+        return
     end
 
 end
