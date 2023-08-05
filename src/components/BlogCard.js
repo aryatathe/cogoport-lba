@@ -41,7 +41,12 @@ const BlogCard = ({ data, xs, sm, md, lg, xl }) => {
           <Typography variant="h3" align="center" color="secondary">
             {data.title}
           </Typography>
-          <Typography variant="body2" align="center" color="primary">
+          <Typography
+            variant="body2"
+            align="center"
+            color="primary"
+            sx={{ transform: "translateY(5px)" }}
+          >
             {data.topic}
           </Typography>
           <Stack

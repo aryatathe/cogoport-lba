@@ -2,7 +2,6 @@ import { useState } from "react";
 
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
@@ -13,7 +12,6 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Checkbox from "@mui/material/Checkbox";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import CloseIcon from "@mui/icons-material/Close";
 
 import { styled } from "@mui/material/styles";
 
@@ -22,20 +20,19 @@ import users from "../content/users";
 
 const FilterArea = ({ visible, close }) => {
   return (
-    <Drawer anchor="right" open={visible}>
+    <Drawer
+      anchor="right"
+      open={visible}
+      ModalProps={{ onBackdropClick: close }}
+    >
       <Stack
         direction="column"
         spacing={1}
-        sx={{ maxWidth: "300px", margin: "10px" }}
+        sx={{ maxWidth: "300px", margin: "20px 10px" }}
       >
-        <IconButton
-          disableRipple
-          onClick={close}
-          sx={{ alignSelf: "flex-end" }}
-        >
-          <CloseIcon fontSize="large" color="secondary" />
-        </IconButton>
-        <Typography variant="h4">Filter</Typography>
+        <Typography variant="h4" align="center">
+          Filter
+        </Typography>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon color="secondary" />}>
             <Typography variant="subtitle1" color="secondary">
@@ -66,7 +63,9 @@ const FilterArea = ({ visible, close }) => {
             ))}
           </AccordionDetails>
         </Accordion>
-        <Typography variant="h4">Sort</Typography>
+        <Typography variant="h4" align="center">
+          Sort
+        </Typography>
       </Stack>
     </Drawer>
   );

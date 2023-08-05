@@ -15,7 +15,7 @@ import Header from "../Header";
 
 import blogs from "../../content/blogs";
 
-const BlogContainer = styled(Box)({
+const BlogContainer = styled(Box)(({ theme }) => ({
   maxWidth: "800px",
   margin: "auto",
   marginTop: "20px",
@@ -24,7 +24,10 @@ const BlogContainer = styled(Box)({
   "& .para": {
     margin: "15px 0",
   },
-});
+  [theme.breakpoints.down("sm")]: {
+    padding: "10px",
+  },
+}));
 
 const Blog = () => {
   const [blog, setBlog] = useState({ loading: true });

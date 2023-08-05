@@ -1,53 +1,96 @@
+import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import Drawer from "@mui/material/Drawer";
 
-import { styled } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
-const HeaderContainer = styled(Stack)({
+import CreateIcon from "@mui/icons-material/Create";
+import MenuIcon from "@mui/icons-material/Menu";
+
+const HeaderContainer = styled(Stack)(({ theme }) => ({
   background: "#ffffff11",
   padding: "10px 20px",
-});
+  [theme.breakpoints.down("md")]: {
+    padding: "5px 10px",
+  },
+}));
 
-const NavButton = styled(Button)({
+const NavButton = styled(Button)(({ theme }) => ({
   fontSize: 18,
   "&.active": {
     pointerEvents: "none",
     background: "#ffffff22",
   },
-});
+  [theme.breakpoints.down("md")]: {
+    minWidth: 0,
+    fontSize: 16,
+    padding: "5px 10px",
+  },
+}));
+
+const NavButtons = (
+  <>
+    <NavButton
+      variant="contained"
+      color="secondary"
+      component={NavLink}
+      to="/edit/new"
+    >
+      <CreateIcon fontSize="large" color="#2b282a" />
+    </NavButton>
+    <NavButton variant="outlined" component={NavLink} to="/">
+      Browse
+    </NavButton>
+    <NavButton variant="outlined" component={NavLink} to="/login">
+      Login
+    </NavButton>
+    <NavButton variant="outlined" component={NavLink} to="/profile/1">
+      Profile
+    </NavButton>
+  </>
+);
 
 const Header = () => {
+  const [mobileToggle, setMobileToggle] = useState(false);
+
+  const theme = useTheme();
+  const sm = useMediaQuery(theme.breakpoints.down("sm"));
   return (
     <HeaderContainer
       direction="row"
       justifyContent="space-between"
       alignItems="center"
+      spacing={1}
     >
       <Typography variant="h1" color="secondary">
         BLOGS
       </Typography>
-      <Stack direction="row" spacing={1}>
-        <NavButton
-          variant="contained"
-          color="secondary"
-          component={NavLink}
-          to="/edit/new"
-        >
-          +
-        </NavButton>
-        <NavButton variant="outlined" component={NavLink} to="/">
-          Browse
-        </NavButton>
-        <NavButton variant="outlined" component={NavLink} to="/login">
-          Login
-        </NavButton>
-        <NavButton variant="outlined" component={NavLink} to="/profile/1">
-          Profile
-        </NavButton>
-      </Stack>
+      {sm ? (
+        <>
+          <IconButton disableRipple onClick={() => setMobileToggle(true)}>
+            <MenuIcon color="primary" fontSize="large" />
+          </IconButton>
+          <Drawer
+            anchor="top"
+            open={mobileToggle}
+            ModalProps={{ onBackdropClick: () => setMobileToggle(false) }}
+          >
+            <Stack direction="column" spacing={1} sx={{ padding: "10px" }}>
+              {NavButtons}
+            </Stack>
+          </Drawer>
+        </>
+      ) : (
+        <Stack direction="row" spacing={1}>
+          {NavButtons}
+        </Stack>
+      )}
     </HeaderContainer>
   );
 };

@@ -1,15 +1,31 @@
 import { createTheme } from "@mui/material/styles";
 
+const breakpointTheme = createTheme({
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 540,
+      md: 768,
+      lg: 1100,
+      xl: 1536,
+    },
+  },
+});
+
 const theme = createTheme({
+  breakpoints: breakpointTheme.breakpoints,
   typography: {
     fontFamily: "Verdana, sans-serif",
     h1: {
       fontSize: 64,
       fontWeight: "bold",
+      [breakpointTheme.breakpoints.down("md")]: { fontSize: 48 },
     },
     h2: {
       fontSize: 56,
       fontWeight: "bold",
+      [breakpointTheme.breakpoints.down("md")]: { fontSize: 42 },
+      [breakpointTheme.breakpoints.down("sm")]: { fontSize: 32 },
     },
     h3: {
       fontSize: 28,
@@ -25,8 +41,10 @@ const theme = createTheme({
     subtitle2: {
       fontSize: 14,
     },
-    body2: {
+    body1: {
       fontSize: 16,
+      [breakpointTheme.breakpoints.down("md")]: { fontSize: 14 },
+      [breakpointTheme.breakpoints.down("sm")]: { fontSize: 13 },
     },
     body2: {
       fontSize: 12,
