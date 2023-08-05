@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
@@ -34,27 +35,33 @@ const NavButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-const NavButtons = (
-  <>
-    <NavButton
-      variant="contained"
-      color="secondary"
-      component={NavLink}
-      to="/edit/new"
-    >
-      <CreateIcon fontSize="large" color="#2b282a" />
-    </NavButton>
-    <NavButton variant="outlined" component={NavLink} to="/">
-      Browse
-    </NavButton>
-    <NavButton variant="outlined" component={NavLink} to="/login">
-      Login
-    </NavButton>
-    <NavButton variant="outlined" component={NavLink} to="/profile/1">
-      Profile
-    </NavButton>
-  </>
-);
+const NavButtons = () => {
+  const loggedIn = useSelector((state) => state.isLoggedIn);
+  const myId = useSelector((state) => state.id);
+  const dispatch = useDispatch();
+  return (
+    <>
+      <NavButton
+        variant="contained"
+        color="secondary"
+        component={NavLink}
+        to="/edit/new"
+      >
+        <CreateIcon fontSize="large" color="#2b282a" />
+      </NavButton>
+      <NavButton variant="outlined" component={NavLink} to="/">
+        Browse
+      </NavButton>
+      <NavButton
+        variant="outlined"
+        component={NavLink}
+        to={loggedIn ? `/profile/${myId}` : "/login"}
+      >
+        {loggedIn ? "Profile" : "Login"}
+      </NavButton>
+    </>
+  );
+};
 
 const Header = () => {
   const [mobileToggle, setMobileToggle] = useState(false);
@@ -82,13 +89,13 @@ const Header = () => {
             ModalProps={{ onBackdropClick: () => setMobileToggle(false) }}
           >
             <Stack direction="column" spacing={1} sx={{ padding: "10px" }}>
-              {NavButtons}
+              <NavButtons />
             </Stack>
           </Drawer>
         </>
       ) : (
         <Stack direction="row" spacing={1}>
-          {NavButtons}
+          <NavButtons />
         </Stack>
       )}
     </HeaderContainer>

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
@@ -25,6 +26,28 @@ const Home = () => {
   const theme = useTheme();
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
   const md = useMediaQuery(theme.breakpoints.down("md"));
+
+  const state = useSelector((state) => state);
+  console.log(state);
+
+  useEffect(() => {
+    fetch(`${process.env.REACT_APP_API_URL}/articles`, {
+      method: "get",
+      headers: new Headers({
+        "ngrok-skip-browser-warning": "69420",
+      }),
+    })
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          console.log(result);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  }, []);
+
   return (
     <>
       <Header />

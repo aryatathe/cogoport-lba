@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
@@ -10,6 +11,12 @@ import Header from "../Header";
 
 const Login = () => {
   const [tab, setTab] = useState(false);
+  const [email, setEmail] = useState("xyz@gmail.com");
+  const [password, setPassword] = useState("password");
+
+  const loggedIn = useSelector((state) => state.isLoggedIn);
+  const dispatch = useDispatch();
+
   return (
     <>
       <Header />
@@ -34,15 +41,74 @@ const Login = () => {
         spacing={1}
         sx={{ marginTop: "40px" }}
       >
-        <TextField label="Email" variant="standard" />
-        <TextField label="Password" variant="standard" />
+        <TextField
+          label="Email"
+          variant="standard"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <TextField
+          label="Password"
+          variant="standard"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
         {tab && <TextField label="Confirm Password" variant="standard" />}
         <Button
           variant="contained"
           color="secondary"
           sx={{ marginTop: "30px !important" }}
+          onClick={() => {
+            const formData = new FormData();
+            formData.append("email", email);
+            formData.append("password", password);
+
+            fetch(`${process.env.REACT_APP_API_URL}/users`, {
+              method: "get",
+              headers: new Headers({
+                "ngrok-skip-browser-warning": "69420",
+              }),
+            })
+              .then((res) => res.json())
+              .then(
+                (result) => {
+                  console.log(result);
+                  result.forEach((user) => {
+                    if (user.email == email) {
+                      fetch(`${process.env.REACT_APP_API_URL}/users/login`, {
+                        method: "post",
+                        headers: new Headers({
+                          "ngrok-skip-browser-warning": "69420",
+                        }),
+                        body: formData,
+                      })
+                        .then((res) => res.json())
+                        .then(
+                          (result) => {
+                            console.log(result);
+                            dispatch({
+                              type: "LOGIN",
+                              payload: {
+                                token: result.token,
+                                email: email,
+                                id: user.id,
+                              },
+                            });
+                          },
+                          (error) => {
+                            console.log(error);
+                          }
+                        );
+                    }
+                  });
+                },
+                (error) => {
+                  console.log(error);
+                }
+              );
+          }}
         >
-          {tab ? "Login" : "Sign Up"}
+          {tab ? "Sign Up" : "Login"}
         </Button>
       </Stack>
     </>
