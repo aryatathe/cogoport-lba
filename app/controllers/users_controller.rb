@@ -71,9 +71,19 @@ class UsersController < ApplicationController
         username = params[:username]
         is_author = params[:is_author]
         profile_pic = params[:profile_pic]
+        name = params[:name]
+        about = params[:about]
 
         if username
             user.username = username
+        end
+
+        if username
+            user.name = name
+        end
+
+        if username
+            user.about = about
         end
 
         if is_author

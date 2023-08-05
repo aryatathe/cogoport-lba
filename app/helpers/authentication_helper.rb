@@ -6,7 +6,7 @@ module AuthenticationHelper
             response[:status] = 400 
             return response
         end
-
+        
         user = User.find_by(token: params[:token])
         
         if user

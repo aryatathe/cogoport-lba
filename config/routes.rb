@@ -25,6 +25,7 @@ Rails.application.routes.draw do
   post "/add-comment", to: "like_comment_follow#AddComment"
   post "/delete-comment", to: "like_comment_follow#DeleteComment"
   post "/follow-user", to: "like_comment_follow#Follow"
+  post "/unfollow-user", to: "like_comment_follow#UnFollow"
 
   get "/get-top-posts", to: "top_and_recommendated_post#TopPosts"
   get "/get-recommendations", to: "top_and_recommendated_post#GetRecommendedPosts"
