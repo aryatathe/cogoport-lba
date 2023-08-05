@@ -35,19 +35,22 @@ class LikeCommentFollowController < ApplicationController
         post.save
 
         topics = post.topics
+        temp = []
         for topic in topics
             begin
                 obj = Topicrecommendation.where(name: topic[:name], user_id: user.id).first
+                temp.push({"begin": topic[:name]})
                 obj.recommendation_score = obj.recommendation_score + 2
                 obj.save
             rescue
+                temp.push({"rescue": topic[:name]})
                 obj = Topicrecommendation.create(name: topic[:name], user_id: user.id)
                 obj.recommendation_score = 2
                 obj.save
             end
         end
 
-        render json: {msg: "Liked!", status: 200}
+        render json: {msg: "Liked!", status: 200, temp: temp}
         return
     end
 
