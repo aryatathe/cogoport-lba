@@ -28,4 +28,19 @@ Rails.application.routes.draw do
 
   get "/get-top-posts", to: "top_and_recommendated_post#TopPosts"
   get "/get-recommendations", to: "top_and_recommendated_post#GetRecommendedPosts"
+
+  #Level 5
+  put "/update-reading-time", to: "level5#UpdateReadingTime"
+  post "/add-to-drafts", to: "level5#AddToDrafts"
+  get "/get-drafts", to: "level5#GetDrafts"
+  delete "/remove-from-drafts", to: "level5#RemoveFromDrafts"
+  post "/add-to-save-laters", to: "level5#AddToSaveLater"
+  get "/get-save-laters", to: "level5#GetSaveLaters"
+  delete "/remove-from-save-laters", to: "level5#RemoveFromSaveLater"
+  post "/create-list", to: "level5#CreateList"
+  post "/add-to-list", to: "level5#AddToList"
+  delete "/remove-from-list", to: "level5#RemoveFromList"
+  get "/view-all-lists", to: "level5#ViewAllLists"
+  get "/get-list", to: "level5#GetList"
+  post "/share-list", to: "level5#shareList"
 end

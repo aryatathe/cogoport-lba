@@ -54,6 +54,7 @@ class PostsController < ApplicationController
         featured_image = params[:featured_image]
         content = params[:content]
         topics = params[:topics]
+        publish_status = params[:publish_status]
 
         post = Post.find(post_id)
         if !post || post.user_id != user.id
@@ -71,6 +72,10 @@ class PostsController < ApplicationController
 
         if content
             post.content = content
+        end
+
+        if publish_status == "true"
+            post.publish_status = true
         end
 
         post.save
@@ -132,6 +137,10 @@ class PostsController < ApplicationController
 
         if (post.user_id != user.id)
             #Check for payment else return error
+            if !post.published
+                render json: {msg: "Unauthorized", status: 403}
+                return
+            end
             post.views_count = post.views_count+1
             post.save
             #Algorithm to calculate popularity of particular post to be in top posts
@@ -139,6 +148,18 @@ class PostsController < ApplicationController
         end
 
         ser_post = ActiveModelSerializers::SerializableResource.new(post, each_serializer: ViewPostSerializerSerializer).as_json
+
+        #Level 5 integration, adding reading time
+        readingMinutes = 0
+        begin
+            readingtimeObj = Readingtime.where(postID: post.id, user_id: user.id).first
+            readingMinutes = readingtimeObj.minutes
+        rescue
+            readingtimeObj = Readingtime.create(postID: post_id, user_id: user.id)
+        end
+
+        ser_post[:readingMinutes] = readingMinutes
+
         render json: {post: ser_post, status: 200}
         return
     end
@@ -191,6 +212,7 @@ class PostsController < ApplicationController
         sort_by_comments = params[:sort_by_comments]
 
         posts = Post.all
+        posts = posts.where(published: true)
         if author
             posts = Post.joins(:user).where("users.username LIKE ?", "%#{author}%")
         end

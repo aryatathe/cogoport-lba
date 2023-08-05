@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_05_042816) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_05_095757) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -49,6 +49,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_05_042816) do
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
+  create_table "drafts", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "postID"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["postID"], name: "index_drafts_on_postID"
+    t.index ["user_id"], name: "index_drafts_on_user_id"
+  end
+
   create_table "likesjunctions", force: :cascade do |t|
     t.integer "user_id"
     t.integer "post_id"
@@ -56,6 +65,30 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_05_042816) do
     t.datetime "updated_at", null: false
     t.index ["post_id"], name: "index_likesjunctions_on_post_id"
     t.index ["user_id"], name: "index_likesjunctions_on_user_id"
+  end
+
+  create_table "lists", force: :cascade do |t|
+    t.string "name"
+    t.integer "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_lists_on_user_id"
+  end
+
+  create_table "listsharedaccesses", force: :cascade do |t|
+    t.string "userID"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "list_id"
+    t.index ["list_id"], name: "index_listsharedaccesses_on_list_id"
+  end
+
+  create_table "postidsforlists", force: :cascade do |t|
+    t.string "PostID"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "list_id"
+    t.index ["list_id"], name: "index_postidsforlists_on_list_id"
   end
 
   create_table "posts", force: :cascade do |t|
@@ -69,6 +102,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_05_042816) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "published", default: false
     t.index ["title"], name: "index_posts_on_title"
     t.index ["user_id"], name: "index_posts_on_user_id"
   end
@@ -78,9 +112,27 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_05_042816) do
     t.integer "post_id", null: false
   end
 
+  create_table "readingtimes", force: :cascade do |t|
+    t.integer "minutes", default: 0
+    t.integer "user_id", null: false
+    t.integer "postID"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["postID"], name: "index_readingtimes_on_postID"
+    t.index ["user_id"], name: "index_readingtimes_on_user_id"
+  end
+
+  create_table "savelaters", force: :cascade do |t|
+    t.string "postID"
+    t.integer "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_savelaters_on_user_id"
+  end
+
   create_table "topicrecommendations", force: :cascade do |t|
     t.string "name"
-    t.integer "recommendation_score"
+    t.float "recommendation_score"
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -116,9 +168,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_05_042816) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "comments", "posts"
   add_foreign_key "comments", "users"
+  add_foreign_key "drafts", "users"
   add_foreign_key "likesjunctions", "posts"
   add_foreign_key "likesjunctions", "users"
+  add_foreign_key "lists", "users"
+  add_foreign_key "listsharedaccesses", "lists"
+  add_foreign_key "postidsforlists", "lists"
   add_foreign_key "posts", "users"
+  add_foreign_key "readingtimes", "users"
+  add_foreign_key "savelaters", "users"
   add_foreign_key "topicrecommendations", "users"
   add_foreign_key "users", "users", column: "following_id"
 end

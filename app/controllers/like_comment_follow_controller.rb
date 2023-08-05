@@ -35,7 +35,6 @@ class LikeCommentFollowController < ApplicationController
         post.save
 
         topics = post.topics
-        temp = []
         for topic in topics
             begin
                 obj = Topicrecommendation.where(name: topic[:name], user_id: user.id).first
@@ -48,7 +47,7 @@ class LikeCommentFollowController < ApplicationController
             end
         end
 
-        render json: {msg: "Liked!", status: 200, temp: temp}
+        render json: {msg: "Liked!", status: 200}
         return
     end
 

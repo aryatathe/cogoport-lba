@@ -1,0 +1,9 @@
+class CreateSavelater < ActiveRecord::Migration[7.0]
+  def change
+    create_table :savelaters do |t|
+      t.string :postID
+      t.references :user, null: false, foreign_key: true
+      t.timestamps
+    end
+  end
+end

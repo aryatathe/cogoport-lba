@@ -10,6 +10,10 @@ class User < ApplicationRecord
   has_many :topicrecommendations, dependent: :destroy, class_name: 'Topicrecommendation'
   belongs_to :following, class_name: "User", optional: true
   has_many :followers, foreign_key: "following_id", class_name: "User"
+  has_many :readingtimes, dependent: :destroy, class_name: 'Readingtime'
+  has_many :drafts, dependent: :destroy, class_name: 'Draft'
+  has_many :savelaters, dependent: :destroy, class_name: 'Savelater'
+  has_many :lists, dependent: :destroy, class_name: 'List'
 
   # Helper method to follow another user
   def follow(user)
