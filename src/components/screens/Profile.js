@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { NavLink, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
@@ -14,7 +15,7 @@ import { styled } from "@mui/material/styles";
 import Header from "../Header";
 import BlogCard from "../BlogCard";
 
-import blogs from "../../content/blogs";
+//import blogs from "../../content/blogs";
 import users from "../../content/users";
 
 const BlogList = styled(Grid)({
@@ -36,19 +37,63 @@ const UserInfo = styled(Stack)({
 
 const Profile = () => {
   const [user, setUser] = useState({ loading: true });
+  const [blogs, setBlogs] = useState({ loading: true });
   const [tab, setTab] = useState(0);
+
+  const myId = useSelector((state) => state.id);
+  const dispatch = useDispatch();
 
   const id = useParams().id;
   useEffect(() => {
-    let flag = true;
-    users.forEach((userItem) => {
-      if (userItem.id == id) {
-        setUser(userItem);
-        flag = false;
-      }
-    });
-    if (flag) setUser({ error: true });
+    setUser({ loading: true });
+    fetch(`${process.env.REACT_APP_API_URL}/users/${id}`, {
+      method: "get",
+      headers: new Headers({
+        "ngrok-skip-browser-warning": "69420",
+      }),
+    })
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          console.log(result);
+          setUser({
+            id: id,
+            name: result.name,
+            email: result.email,
+            about: users[0].about,
+            followers: result.follower_count,
+            following: result.following_count,
+            img: users[0].img,
+          });
+        },
+        (error) => {
+          console.log(error);
+          setUser({ error: true });
+        }
+      );
   }, []);
+
+  useEffect(() => {
+    if (user.loading || user.error) return;
+    fetch(`${process.env.REACT_APP_API_URL}/articles`, {
+      method: "get",
+      headers: new Headers({
+        "ngrok-skip-browser-warning": "69420",
+      }),
+    })
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          console.log(result);
+          setBlogs(result.filter((blog) => blog.author_id == id));
+        },
+        (error) => {
+          console.log(error);
+          setBlogs({ error: true });
+        }
+      );
+  }, [user]);
+
   return (
     <>
       <Header />
@@ -103,9 +148,12 @@ const Profile = () => {
             </Tabs>
             {tab == 0 ? (
               <BlogList container spacing={3}>
-                {blogs
-                  .filter((blog) => blog.author == user.name)
-                  .map((blog, i) => {
+                {blogs.loading ? (
+                  <div>Loading</div>
+                ) : blogs.error ? (
+                  <div>error</div>
+                ) : (
+                  blogs.map((blog, i) => {
                     return (
                       <BlogCard
                         key={i}
@@ -117,7 +165,8 @@ const Profile = () => {
                         xl={3}
                       />
                     );
-                  })}
+                  })
+                )}
               </BlogList>
             ) : tab == 1 ? (
               <div>followers</div>

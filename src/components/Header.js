@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
@@ -38,7 +38,6 @@ const NavButton = styled(Button)(({ theme }) => ({
 const NavButtons = () => {
   const loggedIn = useSelector((state) => state.isLoggedIn);
   const myId = useSelector((state) => state.id);
-  const dispatch = useDispatch();
   return (
     <>
       <NavButton
