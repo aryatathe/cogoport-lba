@@ -94,7 +94,15 @@ const theme = createTheme({
       styleOverrides: { root: { transition: "all 0.2s ease" } },
     },
     MuiButton: {
-      styleOverrides: { root: { textTransform: "none" } },
+      styleOverrides: {
+        root: {
+          textTransform: "none",
+          "&.Mui-disabled": {
+            color: "#000000cc",
+            backgroundColor: "#00000044",
+          },
+        },
+      },
     },
     MuiIconButton: {
       styleOverrides: {

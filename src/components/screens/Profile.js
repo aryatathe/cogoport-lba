@@ -10,7 +10,8 @@ import Box from "@mui/material/Box";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 
-import { styled } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 import Header from "../Header";
 import BlogCard from "../BlogCard";
@@ -19,9 +20,12 @@ import ErrorBox from "../ErrorBox";
 //import blogs from "../../content/blogs";
 import users from "../../content/users";
 
-const BlogList = styled(Grid)({
+const BlogList = styled(Grid)(({ theme }) => ({
   padding: "20px 20px 20px 0",
-});
+  [theme.breakpoints.down("sm")]: {
+    padding: "10px",
+  },
+}));
 
 const UserInfo = styled(Stack)({
   padding: "40px 20px",
@@ -46,6 +50,10 @@ const Profile = () => {
   const dispatch = useDispatch();
 
   const id = useParams().id;
+
+  const theme = useTheme();
+  const sm = useMediaQuery(theme.breakpoints.down("sm"));
+
   useEffect(() => {
     setUser({ loading: true });
     fetch(`${process.env.REACT_APP_API_URL}/users/${id}`, {
@@ -67,8 +75,8 @@ const Profile = () => {
                   name: result.name,
                   email: result.email,
                   about: users[0].about,
-                  followers: result.follower_count,
-                  following: result.following_count,
+                  followers: result.followers.length,
+                  following: result.followings.length,
                   img: users[0].img,
                 }
           );
@@ -125,17 +133,29 @@ const Profile = () => {
                 {user.followers} Followers
               </Typography>
               <Stack id="button-area" direction="row" spacing={1}>
-                <Button variant="outlined" color="secondary">
-                  Follow
-                </Button>
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  component={NavLink}
-                  to="/profile/edit"
-                >
-                  Edit
-                </Button>
+                {id == myId ? (
+                  <>
+                    <Button
+                      variant="outlined"
+                      color="secondary"
+                      component={NavLink}
+                      to="/profile/edit"
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      color="secondary"
+                      onClick={() => dispatch({ type: "LOGOUT" })}
+                    >
+                      Logout
+                    </Button>
+                  </>
+                ) : (
+                  <Button variant="outlined" color="secondary">
+                    Follow
+                  </Button>
+                )}
               </Stack>
             </UserInfo>
           </Grid>
@@ -148,33 +168,58 @@ const Profile = () => {
               textColor="primary"
               indicatorColor="primary"
               sx={{ marginTop: "40px" }}
+              centered={!sm}
+              variant={sm ? "scrollable" : "standard"}
+              scrollButtons
+              allowScrollButtonsMobile
             >
-              <Tab label="Posts" value={0} disableRipple />
-              <Tab label="Followers" value={1} disableRipple />
-              <Tab label="Following" value={2} disableRipple />
+              <Tab
+                label="Posts"
+                value={0}
+                disableRipple
+                size={sm ? "small" : "medium"}
+              />
+              <Tab
+                label="Followers"
+                value={1}
+                disableRipple
+                size={sm ? "small" : "medium"}
+              />
+              <Tab
+                label="Following"
+                value={2}
+                disableRipple
+                size={sm ? "small" : "medium"}
+              />
             </Tabs>
             {tab == 0 ? (
-              <BlogList container spacing={3}>
-                {blogs.loading ? (
-                  <div>Loading</div>
-                ) : blogs.error ? (
-                  <div>error</div>
-                ) : (
-                  blogs.map((blog, i) => {
-                    return (
-                      <BlogCard
-                        key={i}
-                        data={blog}
-                        xs={12}
-                        sm={12}
-                        md={6}
-                        lg={4}
-                        xl={3}
-                      />
-                    );
-                  })
-                )}
-              </BlogList>
+              blogs.loading || blogs.error ? (
+                <ErrorBox
+                  message={user.loading ? "Loading..." : "Couldn't load blogs"}
+                />
+              ) : (
+                <BlogList container spacing={3}>
+                  {blogs.loading ? (
+                    <div>Loading</div>
+                  ) : blogs.error ? (
+                    <div>error</div>
+                  ) : (
+                    blogs.map((blog, i) => {
+                      return (
+                        <BlogCard
+                          key={i}
+                          data={blog}
+                          xs={12}
+                          sm={12}
+                          md={6}
+                          lg={4}
+                          xl={3}
+                        />
+                      );
+                    })
+                  )}
+                </BlogList>
+              )
             ) : tab == 1 ? (
               <div>followers</div>
             ) : (
