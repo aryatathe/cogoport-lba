@@ -74,7 +74,7 @@ class PostsController < ApplicationController
             post.content = content
         end
 
-        if publish_status == "true"
+        if publish_status == true
             post.published = true
         end
 
