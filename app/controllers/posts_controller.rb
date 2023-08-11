@@ -75,7 +75,7 @@ class PostsController < ApplicationController
         end
 
         if publish_status == "true"
-            post.publish_status = true
+            post.published = true
         end
 
         post.save

@@ -1,0 +1,1300 @@
+{
+	"info": {
+		"_postman_id": "cdaf272b-8a04-4bca-9e93-955df31bebb1",
+		"name": "BlogPost Assignment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19223547",
+		"_collection_link": "https://cloudy-equinox-520131.postman.co/workspace/b92d0d91-afaf-4e60-8513-61d131081454/collection/19223547-cdaf272b-8a04-4bca-9e93-955df31bebb1?action=share&creator=19223547&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "User related",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "190030038@iitdh.ac.in",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "pass",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sign up",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "190030038@iitdh.ac.in",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "pass",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/sign-up",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"sign-up"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit User Details",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": "416f246f-3517-4a0d-9513-6c9a17ced375",
+									"type": "text"
+								},
+								{
+									"key": "is_author",
+									"value": "true",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "Rudraksh College",
+									"type": "text"
+								},
+								{
+									"key": "profile_pic",
+									"type": "file",
+									"src": "/Users/rudraksh/Documents/notionverse logo.jpg"
+								},
+								{
+									"key": "about",
+									"value": "My about section",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "Rudraksh",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/edit-user-details",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"edit-user-details"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change Password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": "64bb1149-4ae4-4809-b537-a14ba0ba964a",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "password",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/change-password?",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"change-password"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Profile Details",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": "416f246f-3517-4a0d-9513-6c9a17ced375",
+									"type": "text"
+								},
+								{
+									"key": "user_id",
+									"value": "5",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/get-profile",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"get-profile"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Post related",
+			"item": [
+				{
+					"name": "Create Post",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"6d26fd22-3408-4aff-9dd7-add01acd6b9c\",\n    \"title\": \"Dummy Post\",\n    \"content\": \"This is my first post!\",\n    \"topics\": [\"science\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/create-post",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"create-post"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Post",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"9912ffb8-821a-47b7-b297-964e0a2de397\",\n    \"post_id\": 3,\n    \"topics\": [\"Cogport\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/update-post",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"update-post"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "View My Posts",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": "9912ffb8-821a-47b7-b297-964e0a2de397",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/view-my-posts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"view-my-posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get A Post",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": "9912ffb8-821a-47b7-b297-964e0a2de397",
+									"type": "text"
+								},
+								{
+									"key": "post_id",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/get-post",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"get-post"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Post",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": "9912ffb8-821a-47b7-b297-964e0a2de397",
+									"type": "text"
+								},
+								{
+									"key": "post_id",
+									"value": "3",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/delete-post",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"delete-post"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "View Posts",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": "9912ffb8-821a-47b7-b297-964e0a2de397",
+									"type": "text"
+								},
+								{
+									"key": "author",
+									"value": "rudra",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "sort_by_likes",
+									"value": "false",
+									"type": "text"
+								},
+								{
+									"key": "start_date",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "end_date",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "sort_by_comments",
+									"value": "true",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/view-posts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"view-posts"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Search and Filters",
+			"item": [
+				{
+					"name": "Search Authors with keyword",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": "9912ffb8-821a-47b7-b297-964e0a2de397",
+									"type": "text"
+								},
+								{
+									"key": "keyword",
+									"value": "gma",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/search-authors",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"search-authors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Topics with keyword",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/search-topics?token=9912ffb8-821a-47b7-b297-964e0a2de397&keyword=ai",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"search-topics"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "9912ffb8-821a-47b7-b297-964e0a2de397"
+								},
+								{
+									"key": "keyword",
+									"value": "ai"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Posts with keyword",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": "9912ffb8-821a-47b7-b297-964e0a2de397",
+									"type": "text"
+								},
+								{
+									"key": "keyword",
+									"value": "Po",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/search-posts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"search-posts"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Like, Comment and Follow",
+			"item": [
+				{
+					"name": "Add a like",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": "9912ffb8-821a-47b7-b297-964e0a2de397",
+									"type": "text"
+								},
+								{
+									"key": "post_id",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/like-post",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"like-post"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove a like",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": "9912ffb8-821a-47b7-b297-964e0a2de397",
+									"type": "text"
+								},
+								{
+									"key": "post_id",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/unlike-post",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"unlike-post"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add a comment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": "9912ffb8-821a-47b7-b297-964e0a2de397",
+									"type": "text"
+								},
+								{
+									"key": "post_id",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "comment_description",
+									"value": "comment 1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/add-comment",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"add-comment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete comment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": "9912ffb8-821a-47b7-b297-964e0a2de397",
+									"type": "text"
+								},
+								{
+									"key": "post_id",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "comment_id",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/delete-comment",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"delete-comment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Follow User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": "9912ffb8-821a-47b7-b297-964e0a2de397",
+									"type": "text"
+								},
+								{
+									"key": "author_id",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/follow-user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"follow-user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unfollow User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": "9912ffb8-821a-47b7-b297-964e0a2de397",
+									"type": "text"
+								},
+								{
+									"key": "author_id",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/unfollow-user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"unfollow-user"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Top and Recommendated Posts",
+			"item": [
+				{
+					"name": "Get Top Posts",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": "9912ffb8-821a-47b7-b297-964e0a2de397",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/get-top-posts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"get-top-posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Recommendations",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": "9912ffb8-821a-47b7-b297-964e0a2de397",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/get-recommendations",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"get-recommendations"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Level 5",
+			"item": [
+				{
+					"name": "Update reading time",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": "9912ffb8-821a-47b7-b297-964e0a2de397",
+									"type": "text"
+								},
+								{
+									"key": "additional_minutes",
+									"value": "5",
+									"type": "text"
+								},
+								{
+									"key": "post_id",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/update-reading-time",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"update-reading-time"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add to Drafts",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": "0dbaecb7-edef-4735-a7ea-2cae77591924",
+									"type": "text"
+								},
+								{
+									"key": "post_id",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/add-to-drafts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"add-to-drafts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Drafts",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": "0dbaecb7-edef-4735-a7ea-2cae77591924",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/get-drafts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"get-drafts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete draft",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": "0dbaecb7-edef-4735-a7ea-2cae77591924",
+									"type": "text"
+								},
+								{
+									"key": "draft_id",
+									"value": "3",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/remove-from-drafts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"remove-from-drafts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add to Save later",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": "9912ffb8-821a-47b7-b297-964e0a2de397",
+									"type": "text"
+								},
+								{
+									"key": "post_id",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/add-to-save-laters",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"add-to-save-laters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Save laters",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": "9912ffb8-821a-47b7-b297-964e0a2de397",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/get-save-laters",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"get-save-laters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete from save laters",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": "9912ffb8-821a-47b7-b297-964e0a2de397",
+									"type": "text"
+								},
+								{
+									"key": "save_later_id",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/remove-from-save-laters",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"remove-from-save-laters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create list",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": "9912ffb8-821a-47b7-b297-964e0a2de397",
+									"type": "text"
+								},
+								{
+									"key": "list_name",
+									"value": "List 2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/create-list",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"create-list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add to list",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": "9912ffb8-821a-47b7-b297-964e0a2de397",
+									"type": "text"
+								},
+								{
+									"key": "list_id",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "post_id",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/add-to-list",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"add-to-list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove from the list",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": "9912ffb8-821a-47b7-b297-964e0a2de397",
+									"type": "text"
+								},
+								{
+									"key": "list_id",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "post_id",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/remove-from-list",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"remove-from-list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "View all lists",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": "9912ffb8-821a-47b7-b297-964e0a2de397",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/view-all-lists",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"view-all-lists"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get the list with posts",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": "0dbaecb7-edef-4735-a7ea-2cae77591924",
+									"type": "text"
+								},
+								{
+									"key": "list_id",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/get-list",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"get-list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Share List access",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": "9912ffb8-821a-47b7-b297-964e0a2de397",
+									"type": "text"
+								},
+								{
+									"key": "list_id",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "shared_user_id",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/share-list",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"share-list"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
