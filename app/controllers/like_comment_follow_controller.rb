@@ -223,6 +223,13 @@ class LikeCommentFollowController < ApplicationController
         end
 
         Follower.create(to_id: author.id, from_id: user.id)
+
+        author.followers_count = author.followers_count + 1
+        author.save
+
+        user.following_count = user.following_count + 1
+        user.save
+
         render json: {msg: "Successfully followed!", status: 200}
         return
     end
@@ -262,6 +269,13 @@ class LikeCommentFollowController < ApplicationController
         end
 
         followerObj.destroy
+
+        author.followers_count = author.followers_count - 1
+        author.save
+
+        user.following_count = user.following_count - 1
+        user.save
+
         render json: {msg: "Successfully unfollowed!", status: 200}
         return
 
