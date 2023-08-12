@@ -465,8 +465,42 @@ class Level5Controller < ApplicationController
             return
         end
 
-        render json: postVersion
+        render json: {version: postVersion, status: 200}
         return
     end
+
+    def GetAllVersions
+        response = AuthenticateUser(params)
+        user = nil
+        if response[:status] != 200
+            render json: response
+            return
+        else
+            user = response[:user]
+        end
+
+        if !params[:post_id]
+            render json: {msg: "Parameter is missing!", status: 404}
+            return
+        end
+        begin
+            post = Post.find(params[:post_id])
+        rescue
+            render json: {msg: "Post id is Invalid!", status: 400}
+            return
+        end
+
+        if (post.user_id != user.id)
+            render json: {msg: "Unauthorized", status: 403}
+            return
+        end
+
+        postVersions = Revisionhistory.where(post_id: post.id)
+        ser_data = ActiveModelSerializers::SerializableResource.new(postVersions, each_serializer: AllVersionsSerializer).as_json
+        
+        render json: {versions: ser_data, status: 200}
+        return
+    end
+
 
 end

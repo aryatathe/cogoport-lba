@@ -35,8 +35,7 @@ class PostsController < ApplicationController
         end
 
         #Adding Revision history for level 5 integration
-        Revisionhistory.create(post_id: post.id, title: title, featured_image: featured_image, content: content)
-
+        Revisionhistory.create(post_id: post.id, title: title, featured_image: featured_image, content: content, published: post.published)
         render json: {msg: "Post successfully created!", status: 200}
         return
     end
@@ -87,6 +86,10 @@ class PostsController < ApplicationController
             post.published = true
         end
 
+        if publish_status == false
+            post.published = false
+        end
+
         post.save
 
         for topicName in topics
@@ -104,7 +107,7 @@ class PostsController < ApplicationController
 
         #Adding Revision history for level 5 integration
         newVersion = post.version + 1
-        Revisionhistory.create(post_id: post.id, title: title, featured_image: featured_image, content: content, version: newVersion)
+        Revisionhistory.create(post_id: post.id, title: title, featured_image: featured_image, content: content, version: newVersion, published: post.published)
         post.version = newVersion
         post.save
 
