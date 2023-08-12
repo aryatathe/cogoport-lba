@@ -44,4 +44,5 @@ Rails.application.routes.draw do
   get "/view-all-lists", to: "level5#ViewAllLists"
   get "/get-list", to: "level5#GetList"
   post "/share-list", to: "level5#shareList"
+  get "/view-a-version-of-post", to: "level5#ViewAVersionOfPost"
 end

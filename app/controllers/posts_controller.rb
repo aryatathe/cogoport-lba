@@ -16,6 +16,7 @@ class PostsController < ApplicationController
         featured_image = params[:featured_image]
         content = params[:content]
         topics = params[:topics]
+        publish_status = params[:publish_status]
 
         post = Post.create(user_id: user.id, title: title, featured_image: featured_image, content: content)
         for topic in topics
@@ -27,6 +28,14 @@ class PostsController < ApplicationController
                 post.topics << newTopicObj
             end
         end
+
+        if publish_status == true
+            post.published = true
+            post.save
+        end
+
+        #Adding Revision history for level 5 integration
+        Revisionhistory.create(post_id: post.id, title: title, featured_image: featured_image, content: content)
 
         render json: {msg: "Post successfully created!", status: 200}
         return
@@ -93,7 +102,13 @@ class PostsController < ApplicationController
             end
         end
 
-        render json: {msg: "Post successfully updated!", status: 200}
+        #Adding Revision history for level 5 integration
+        newVersion = post.version + 1
+        Revisionhistory.create(post_id: post.id, title: title, featured_image: featured_image, content: content, version: newVersion)
+        post.version = newVersion
+        post.save
+
+        render json: {msg: "Post successfully updated to version #{newVersion}!", status: 200}
         return
     end
 
@@ -155,7 +170,7 @@ class PostsController < ApplicationController
             readingtimeObj = Readingtime.where(postID: post.id, user_id: user.id).first
             readingMinutes = readingtimeObj.minutes
         rescue
-            readingtimeObj = Readingtime.create(postID: post_id, user_id: user.id)
+            readingtimeObj = Readingtime.create(postID: post.id, user_id: user.id)
         end
 
         ser_post[:readingMinutes] = readingMinutes

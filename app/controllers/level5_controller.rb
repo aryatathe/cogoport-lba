@@ -431,4 +431,42 @@ class Level5Controller < ApplicationController
         return
     end
 
+    def ViewAVersionOfPost
+        response = AuthenticateUser(params)
+        user = nil
+        if response[:status] != 200
+            render json: response
+            return
+        else
+            user = response[:user]
+        end
+
+        if !params[:post_id]
+            render json: {msg: "Parameter is missing!", status: 404}
+            return
+        end
+        begin
+            post = Post.find(params[:post_id])
+        rescue
+            render json: {msg: "Post id is Invalid!", status: 400}
+            return
+        end
+
+        if (post.user_id != user.id)
+            render json: {msg: "Unauthorized", status: 403}
+            return
+        end
+
+        versionNumber = params[:version]
+        begin
+            postVersion = Revisionhistory.where(post_id: post.id, version: versionNumber).first
+        rescue
+            render json: {msg: "Invalid version!", status: 400}
+            return
+        end
+
+        render json: postVersion
+        return
+    end
+
 end

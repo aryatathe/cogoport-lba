@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_05_095757) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_12_094516) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -103,6 +103,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_05_095757) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "published", default: false
+    t.integer "version", default: 1
     t.index ["title"], name: "index_posts_on_title"
     t.index ["user_id"], name: "index_posts_on_user_id"
   end
@@ -120,6 +121,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_05_095757) do
     t.datetime "updated_at", null: false
     t.index ["postID"], name: "index_readingtimes_on_postID"
     t.index ["user_id"], name: "index_readingtimes_on_user_id"
+  end
+
+  create_table "revisionhistories", force: :cascade do |t|
+    t.integer "version", default: 1
+    t.string "title"
+    t.string "content"
+    t.string "featured_image"
+    t.integer "post_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["post_id"], name: "index_revisionhistories_on_post_id"
   end
 
   create_table "savelaters", force: :cascade do |t|
@@ -176,6 +188,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_05_095757) do
   add_foreign_key "postidsforlists", "lists"
   add_foreign_key "posts", "users"
   add_foreign_key "readingtimes", "users"
+  add_foreign_key "revisionhistories", "posts"
   add_foreign_key "savelaters", "users"
   add_foreign_key "topicrecommendations", "users"
   add_foreign_key "users", "users", column: "following_id"
