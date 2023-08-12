@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_12_094516) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_12_102015) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -56,6 +56,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_12_094516) do
     t.datetime "updated_at", null: false
     t.index ["postID"], name: "index_drafts_on_postID"
     t.index ["user_id"], name: "index_drafts_on_user_id"
+  end
+
+  create_table "followers", force: :cascade do |t|
+    t.integer "to_id"
+    t.integer "from_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["from_id"], name: "index_followers_on_from_id"
+    t.index ["to_id"], name: "index_followers_on_to_id"
   end
 
   create_table "likesjunctions", force: :cascade do |t|
@@ -170,9 +179,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_12_094516) do
     t.string "token"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "following_id"
     t.index ["email"], name: "unique_emails", unique: true
-    t.index ["following_id"], name: "index_users_on_following_id"
     t.index ["token"], name: "index_users_on_token", unique: true
   end
 
@@ -181,6 +188,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_12_094516) do
   add_foreign_key "comments", "posts"
   add_foreign_key "comments", "users"
   add_foreign_key "drafts", "users"
+  add_foreign_key "followers", "users", column: "from_id"
+  add_foreign_key "followers", "users", column: "to_id"
   add_foreign_key "likesjunctions", "posts"
   add_foreign_key "likesjunctions", "users"
   add_foreign_key "lists", "users"
@@ -191,5 +200,4 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_12_094516) do
   add_foreign_key "revisionhistories", "posts"
   add_foreign_key "savelaters", "users"
   add_foreign_key "topicrecommendations", "users"
-  add_foreign_key "users", "users", column: "following_id"
 end

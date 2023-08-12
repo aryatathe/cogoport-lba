@@ -211,12 +211,23 @@ class LikeCommentFollowController < ApplicationController
             return
         end
 
-        user.follow(author)
+        if(user.id == author.id)
+            render json: {msg: "You can not follow yourself!", status: 400}
+            return
+        end
+
+        followerObj = Follower.where(to_id: author.id, from_id: user.id).first
+        if followerObj
+            render json: {msg: "Already followed!", status: 400}
+            return
+        end
+
+        Follower.create(to_id: author.id, from_id: user.id)
         render json: {msg: "Successfully followed!", status: 200}
         return
     end
 
-    def UnFollowAuthor
+    def UnFollow
         response = AuthenticateUser(params)
         user = nil
         if response[:status] != 200
@@ -239,8 +250,19 @@ class LikeCommentFollowController < ApplicationController
             return
         end
 
-        user.unfollow(author)
-        render json: {msg: "Successfully followed!", status: 200}
+        if(user.id == author.id)
+            render json: {msg: "You can not unfollow yourself!", status: 400}
+            return
+        end
+
+        followerObj = Follower.where(to_id: author.id, from_id: user.id).first
+        if !followerObj
+            render json: {msg: "You have not followed the author!", status: 400}
+            return
+        end
+
+        followerObj.destroy
+        render json: {msg: "Successfully unfollowed!", status: 200}
         return
 
     end
