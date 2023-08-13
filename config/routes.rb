@@ -30,6 +30,10 @@ Rails.application.routes.draw do
   get "/get-top-posts", to: "top_and_recommendated_post#TopPosts"
   get "/get-recommendations", to: "top_and_recommendated_post#GetRecommendedPosts"
 
+  #Level 4
+  post "/create-order", to: "payment#CreateOrder"
+  post "/confirm-order", to: "payment#VerifyPayment"
+
   #Level 5
   put "/update-reading-time", to: "level5#UpdateReadingTime"
   post "/add-to-drafts", to: "level5#AddToDrafts"

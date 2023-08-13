@@ -154,11 +154,17 @@ class PostsController < ApplicationController
         end
 
         if (post.user_id != user.id)
-            #Check for payment else return error
             if !post.published
                 render json: {msg: "Unauthorized", status: 403}
                 return
             end
+            if user.num_of_posts_left<=0
+                render json: {msg: "Please pay to see more!", status: 400}
+                return
+            end
+
+            user.num_of_posts_left = user.num_of_posts_left - 1
+            user.save
             post.views_count = post.views_count+1
             post.save
             #Algorithm to calculate popularity of particular post to be in top posts
@@ -178,7 +184,7 @@ class PostsController < ApplicationController
 
         ser_post[:readingMinutes] = readingMinutes
 
-        render json: {post: ser_post, status: 200}
+        render json: {post: ser_post, msg: "You have #{user.num_of_posts_left} Posts left!", status: 200}
         return
     end
 
@@ -222,7 +228,7 @@ class PostsController < ApplicationController
         else
             user = response[:user]
         end
-        #Level 4 remaining
+
         author = params[:author]
         start_date = params[:start_date]
         end_date = params[:end_date]
