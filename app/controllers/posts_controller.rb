@@ -153,13 +153,15 @@ class PostsController < ApplicationController
             return
         end
 
+        ser_post = ActiveModelSerializers::SerializableResource.new(post, each_serializer: ViewPostSerializerSerializer).as_json
         if (post.user_id != user.id)
             if !post.published
                 render json: {msg: "Unauthorized", status: 403}
                 return
             end
             if user.num_of_posts_left<=0
-                render json: {msg: "Please pay to see more!", status: 400}
+                ser_post[:content] = nil
+                render json: {post: ser_post, postsLeft: user.num_of_posts_left, msg: "Please pay to see more!", status: 400}
                 return
             end
 
@@ -170,8 +172,6 @@ class PostsController < ApplicationController
             #Algorithm to calculate popularity of particular post to be in top posts
             post.popularity_metric = post.views_count * 1 + post.likes_count * 3 + post.comments_count * 2
         end
-
-        ser_post = ActiveModelSerializers::SerializableResource.new(post, each_serializer: ViewPostSerializerSerializer).as_json
 
         #Level 5 integration, adding reading time
         readingMinutes = 0
@@ -184,7 +184,7 @@ class PostsController < ApplicationController
 
         ser_post[:readingMinutes] = readingMinutes
 
-        render json: {post: ser_post, msg: "You have #{user.num_of_posts_left} Posts left!", status: 200}
+        render json: {post: ser_post, msg: "You have #{user.num_of_posts_left} Posts left!", postsLeft: user.num_of_posts_left, status: 200}
         return
     end
 

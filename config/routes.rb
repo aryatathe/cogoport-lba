@@ -33,6 +33,7 @@ Rails.application.routes.draw do
   #Level 4
   post "/create-order", to: "payment#CreateOrder"
   post "/confirm-order", to: "payment#VerifyPayment"
+  post "/add-count", to: "payment#AddCount"
 
   #Level 5
   put "/update-reading-time", to: "level5#UpdateReadingTime"

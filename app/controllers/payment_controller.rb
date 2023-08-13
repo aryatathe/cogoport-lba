@@ -37,4 +37,22 @@ class PaymentController < ApplicationController
         render json: {msg: "Successfully purchased! You have #{user.num_of_posts_left} left!", status: 200}
         return
     end
+
+    def AddCount
+      #For Integration of Stripe frontend developer
+      #Its just a bypass
+      response = AuthenticateUser(params)
+        user = nil
+        if response[:status] != 200
+            render json: response
+            return
+        else
+            user = response[:user]
+        end
+        count = params[:count]
+        user.num_of_posts_left = user.num_of_posts_left + count.to_i
+        user.save
+        render json: {msg: "Successfully purchased! You have #{user.num_of_posts_left} left!", status: 200}
+        return
+    end
 end
