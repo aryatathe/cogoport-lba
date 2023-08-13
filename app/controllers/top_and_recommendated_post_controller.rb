@@ -37,8 +37,8 @@ class TopAndRecommendatedPostController < ApplicationController
         end
 
         top_posts = Post.order(popularity_metric: :desc).limit(10)
-        ser_top_posts = ActiveModelSerializers::SerializableResource.new(top_posts, each_serializer: ViewPostSerializerSerializer).as_json
-        ser_recommended_posts = ActiveModelSerializers::SerializableResource.new(recommendations, each_serializer: ViewPostSerializerSerializer).as_json
+        ser_top_posts = ActiveModelSerializers::SerializableResource.new(top_posts, each_serializer: ViewMyPostsSerializer).as_json
+        ser_recommended_posts = ActiveModelSerializers::SerializableResource.new(recommendations, each_serializer: ViewMyPostsSerializer).as_json
 
         finalRecommendations = (ser_recommended_posts.to_a + ser_top_posts.to_a).uniq
 

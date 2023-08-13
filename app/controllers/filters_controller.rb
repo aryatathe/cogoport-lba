@@ -40,7 +40,23 @@ class FiltersController < ApplicationController
         end
         
         keyword = params[:keyword]
-        posts = Post.where("LOWER(title) LIKE ?", "%#{keyword.downcase}%")
+        author_id = params[:author_id]
+        postsByKeyword = []
+        postsByAuthor = []
+        if keyword != nil
+            postsByKeyword = Post.where("LOWER(title) LIKE ?", "%#{keyword.downcase}%")
+            serPostsByKeyword = ActiveModelSerializers::SerializableResource.new(postsByKeyword, each_serializer: ViewMyPostsSerializer).as_json
+        end
+        if author_id != nil
+            begin
+                author = User.find(author_id)
+                postsByAuthor = author.posts
+                serPostsByAuthor = ActiveModelSerializers::SerializableResource.new(postsByAuthor, each_serializer: ViewMyPostsSerializer).as_json
+            end
+        end
+
+        posts = (serPostsByKeyword.to_a + serPostsByAuthor.to_a).uniq
+        
         render json: {postsList: posts, status: 200}
         return 
     end
