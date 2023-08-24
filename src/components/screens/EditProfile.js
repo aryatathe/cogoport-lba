@@ -32,6 +32,9 @@ const EditProfile = () => {
   const [tab, setTab] = useState(0);
   const [data, setData] = useState({ name: "", about: "" });
 
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
   const token = useSelector((state) => state.token);
   const myId = useSelector((state) => state.id);
 
@@ -41,7 +44,7 @@ const EditProfile = () => {
 
   useEffect(() => {
     if (token == "") {
-      navigate("/login");
+      navigate("/login", { replace: true });
       return;
     }
     fetch(
@@ -61,6 +64,26 @@ const EditProfile = () => {
         }
       );
   }, []);
+
+  const updatePassword = () => {
+    fetch(`${process.env.REACT_APP_API_URL}/change-password`, {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({ password: password, token: token }),
+    })
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          console.log(result);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  };
 
   const updateProfile = () => {
     fetch(`${process.env.REACT_APP_API_URL}/edit-user-details`, {
@@ -124,18 +147,28 @@ const EditProfile = () => {
           </>
         ) : (
           <>
-            <LoginInput label="Old Password" variant="standard" />
-            <LoginInput label="New Password" variant="standard" />
-            <LoginInput label="Confirm Password" variant="standard" />
+            <LoginInput
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              label="New Password"
+              variant="standard"
+            />
+            <LoginInput
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              label="Confirm Password"
+              variant="standard"
+            />
           </>
         )}
         <Button
           variant="contained"
           color="secondary"
           sx={{ marginTop: "30px !important" }}
-          onClick={updateProfile}
+          onClick={tab == 0 ? updateProfile : updatePassword}
+          disabled={tab == 1 && password != confirmPassword}
         >
-          Save
+          {tab == 0 ? "Save" : "Update"}
         </Button>
       </Stack>
     </>

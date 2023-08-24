@@ -8,7 +8,9 @@ import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
 
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
 import EditIcon from "@mui/icons-material/Edit";
 
 import { styled, useTheme } from "@mui/material/styles";
@@ -40,6 +42,7 @@ const BlogContainer = styled(Box)(({ theme }) => ({
 
 const Blog = () => {
   const [blog, setBlog] = useState({ loading: true });
+  const [isLiked, setIsLiked] = useState(false);
 
   const token = useSelector((state) => state.token);
   const myId = useSelector((state) => state.id);
@@ -50,8 +53,7 @@ const Blog = () => {
   const theme = useTheme();
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
 
-  useEffect(() => {
-    setBlog({ loading: true });
+  const fetchBlog = () => {
     fetch(
       `${process.env.REACT_APP_API_URL}/get-post?token=${token}&post_id=${id}`,
       {
@@ -63,12 +65,46 @@ const Blog = () => {
         (result) => {
           console.log(result);
           setBlog(result.post);
+          let flag = false;
+          result.post.likesjunctions.forEach((like) => {
+            if (like.user_details.id == myId) flag = true;
+          });
+          setIsLiked(flag);
         },
         (error) => {
           console.log(error);
           //setBlog({ error: true });
         }
       );
+  };
+
+  const like = () => {
+    fetch(
+      `${process.env.REACT_APP_API_URL}/${isLiked ? "unlike" : "like"}-post`,
+      {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({ token: token, post_id: id }),
+      }
+    )
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          console.log(result);
+          fetchBlog();
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  };
+
+  useEffect(() => {
+    setBlog({ loading: true });
+    fetchBlog();
   }, []);
 
   return (
@@ -152,8 +188,15 @@ const Blog = () => {
                     <Typography variant="body2" sx={{ marginLeft: "10px" }}>
                       {blog.likes_count}
                     </Typography>
-                    <IconButton disableRipple>
-                      <FavoriteBorderIcon fontSize="large" color="secondary" />
+                    <IconButton disableRipple onClick={like}>
+                      {isLiked ? (
+                        <FavoriteIcon fontSize="large" color="secondary" />
+                      ) : (
+                        <FavoriteBorderIcon
+                          fontSize="large"
+                          color="secondary"
+                        />
+                      )}
                     </IconButton>
                   </>
                 )}

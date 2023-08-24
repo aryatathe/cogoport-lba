@@ -77,24 +77,28 @@ const EditBlog = () => {
   const id = useParams().id;
   const navigate = useNavigate();
 
-  console.log(topic);
-
-  const createBlog = () => {
-    fetch(`${process.env.REACT_APP_API_URL}/create-post`, {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({
-        token: token,
-        title: title,
-        feature_image: img,
-        content: content,
-        topics: [topic],
-        publish_status: true,
-      }),
-    })
+  const uploadBlog = () => {
+    fetch(
+      `${process.env.REACT_APP_API_URL}/${
+        id == "new" ? "create" : "update"
+      }-post`,
+      {
+        method: id == "new" ? "post" : "put",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          token: token,
+          post_id: blog.id,
+          title: title,
+          featured_image: img,
+          content: content,
+          topics: [topic],
+          publish_status: true,
+        }),
+      }
+    )
       .then((res) => res.json())
       .then(
         (result) => {
@@ -112,17 +116,17 @@ const EditBlog = () => {
       return;
     }
     setBlog({ loading: true });
-    fetch(`${process.env.REACT_APP_API_URL}/articles/${id}`, {
-      method: "get",
-      headers: new Headers({
-        "ngrok-skip-browser-warning": "69420",
-      }),
-    })
+    fetch(
+      `${process.env.REACT_APP_API_URL}/get-post?token=${token}&post_id=${id}`,
+      {
+        method: "get",
+      }
+    )
       .then((res) => res.json())
       .then(
         (result) => {
           console.log(result);
-          setBlog(result);
+          setBlog(result.post);
         },
         (error) => {
           console.log(error);
@@ -133,10 +137,11 @@ const EditBlog = () => {
 
   useEffect(() => {
     if (blog.loading || blog.error || id == "new") return;
-    if (blog.author_id != myId) navigate(`/profile/${myId}`);
+    if (blog.user_details.id != myId)
+      navigate(`/profile/${myId}`, { replace: true });
     setTitle(blog.title);
-    setContent(blog.description);
-    setTopic(blog.topic);
+    setContent(blog.content);
+    setTopic(blog.topics[0].name);
   }, [blog]);
 
   return (
@@ -207,8 +212,8 @@ const EditBlog = () => {
                 setTopic(newValue);
               }}
             />
-            <Button variant="contained" color="secondary" onClick={createBlog}>
-              Post
+            <Button variant="contained" color="secondary" onClick={uploadBlog}>
+              {id == "new" ? "Post" : "Update"}
             </Button>
           </Stack>
         </Editor>
