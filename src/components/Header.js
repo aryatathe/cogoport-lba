@@ -36,7 +36,7 @@ const NavButton = styled(Button)(({ theme }) => ({
 }));
 
 const NavButtons = () => {
-  const loggedIn = useSelector((state) => state.isLoggedIn);
+  const token = useSelector((state) => state.token);
   const myId = useSelector((state) => state.id);
   return (
     <>
@@ -54,9 +54,9 @@ const NavButtons = () => {
       <NavButton
         variant="outlined"
         component={NavLink}
-        to={loggedIn ? `/profile/${myId}` : "/login"}
+        to={token != "" ? `/profile/${myId}` : "/login"}
       >
-        {loggedIn ? "Profile" : "Login"}
+        {token != "" ? "Profile" : "Login"}
       </NavButton>
     </>
   );

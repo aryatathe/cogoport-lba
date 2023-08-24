@@ -41,7 +41,7 @@ const BlogContainer = styled(Box)(({ theme }) => ({
 const Blog = () => {
   const [blog, setBlog] = useState({ loading: true });
 
-  const loggedIn = useSelector((state) => state.isLoggedIn);
+  const token = useSelector((state) => state.token);
   const myId = useSelector((state) => state.id);
   const dispatch = useDispatch();
 
@@ -52,21 +52,21 @@ const Blog = () => {
 
   useEffect(() => {
     setBlog({ loading: true });
-    fetch(`${process.env.REACT_APP_API_URL}/articles/${id}`, {
-      method: "get",
-      headers: new Headers({
-        "ngrok-skip-browser-warning": "69420",
-      }),
-    })
+    fetch(
+      `${process.env.REACT_APP_API_URL}/get-post?token=${token}&post_id=${id}`,
+      {
+        method: "get",
+      }
+    )
       .then((res) => res.json())
       .then(
         (result) => {
           console.log(result);
-          setBlog(result);
+          setBlog(result.post);
         },
         (error) => {
           console.log(error);
-          setBlog({ error: true });
+          //setBlog({ error: true });
         }
       );
   }, []);
@@ -87,7 +87,7 @@ const Blog = () => {
             <img id="placeholderImage" src={tempImage} />
             <img src={blog.image} />
           </Box>
-          {blog.description.split("\n").map((para, i) => (
+          {blog.content.split("\n").map((para, i) => (
             <Typography variant="body1" key={i} className="para">
               {para}
             </Typography>
@@ -107,10 +107,10 @@ const Blog = () => {
                 variant="h4"
                 color="secondary"
                 component={NavLink}
-                to={`/profile/${blog.authorId}`}
+                to={`/profile/${blog.user_details.id}`}
                 sx={{ "&:hover": { opacity: 0.6 } }}
               >
-                {blog.author_name}
+                {blog.user_details.name}
               </Typography>
               <Stack direction="row" spacing={2}>
                 <Typography variant="body2">
@@ -121,7 +121,7 @@ const Blog = () => {
                   <></>
                 ) : (
                   <Typography variant="body2" color="secondary">
-                    {blog.topic}
+                    {blog.topics[0].name}
                   </Typography>
                 )}
                 <Typography variant="body2">
@@ -130,16 +130,16 @@ const Blog = () => {
               </Stack>
               {sm ? (
                 <Typography variant="body2" color="secondary">
-                  {blog.topic}
+                  {blog.topics[0].name}
                 </Typography>
               ) : (
                 <></>
               )}
             </Stack>
             <span style={{ flex: 1 }} />
-            {loggedIn ? (
+            {token != "" ? (
               <>
-                {id == myId ? (
+                {blog.user_details.id == myId ? (
                   <IconButton
                     disableRipple
                     component={NavLink}

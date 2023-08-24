@@ -1,4 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import { useNavigate } from "react-router";
 
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
@@ -27,6 +30,58 @@ const LoginInput = styled(TextField)({
 
 const EditProfile = () => {
   const [tab, setTab] = useState(0);
+  const [data, setData] = useState({ name: "", about: "" });
+
+  const token = useSelector((state) => state.token);
+  const myId = useSelector((state) => state.id);
+
+  const navigate = useNavigate();
+
+  console.log(data);
+
+  useEffect(() => {
+    if (token == "") {
+      navigate("/login");
+      return;
+    }
+    fetch(
+      `${process.env.REACT_APP_API_URL}/get-profile?token=${token}&user_id=${myId}`,
+      {
+        method: "get",
+      }
+    )
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          console.log(result);
+          if (result.status == 200) setData(result.profile);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  }, []);
+
+  const updateProfile = () => {
+    fetch(`${process.env.REACT_APP_API_URL}/edit-user-details`, {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({ ...data, token: token }),
+    })
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          console.log(result);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  };
+
   return (
     <>
       <Header />
@@ -53,8 +108,19 @@ const EditProfile = () => {
       >
         {tab == 0 ? (
           <>
-            <LoginInput label="Name" variant="standard" />
-            <LoginInput label="About" variant="standard" multiline />
+            <LoginInput
+              label="Name"
+              value={data.name ? data.name : ""}
+              onChange={(e) => setData({ ...data, name: e.target.value })}
+              variant="standard"
+            />
+            <LoginInput
+              label="About"
+              value={data.about ? data.about : ""}
+              onChange={(e) => setData({ ...data, about: e.target.value })}
+              variant="standard"
+              multiline
+            />
           </>
         ) : (
           <>
@@ -67,6 +133,7 @@ const EditProfile = () => {
           variant="contained"
           color="secondary"
           sx={{ marginTop: "30px !important" }}
+          onClick={updateProfile}
         >
           Save
         </Button>

@@ -25,8 +25,7 @@ const Home = () => {
   const [filterToggle, setFilterToggle] = useState(false);
   const [blogs, setBlogs] = useState({ loading: true });
 
-  const state = useSelector((state) => state);
-  console.log(state);
+  const token = useSelector((state) => state.token);
 
   const theme = useTheme();
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
@@ -34,17 +33,14 @@ const Home = () => {
 
   useEffect(() => {
     setBlogs({ loading: true });
-    fetch(`${process.env.REACT_APP_API_URL}/articles`, {
+    fetch(`${process.env.REACT_APP_API_URL}/view-posts?token=${token}`, {
       method: "get",
-      headers: new Headers({
-        "ngrok-skip-browser-warning": "69420",
-      }),
     })
       .then((res) => res.json())
       .then(
         (result) => {
           console.log(result);
-          setBlogs(result);
+          setBlogs(result.posts);
         },
         (error) => {
           console.log(error);

@@ -66,16 +66,45 @@ const EditBlog = () => {
   const [img, setImg] = useState(tempImage);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [topic, setTopic] = useState("");
+  const [topic, setTopic] = useState(topics[0]);
 
   console.log(img);
 
-  const loggedIn = useSelector((state) => state.isLoggedIn);
+  const token = useSelector((state) => state.token);
   const myId = useSelector((state) => state.id);
   const dispatch = useDispatch();
 
   const id = useParams().id;
   const navigate = useNavigate();
+
+  console.log(topic);
+
+  const createBlog = () => {
+    fetch(`${process.env.REACT_APP_API_URL}/create-post`, {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        token: token,
+        title: title,
+        feature_image: img,
+        content: content,
+        topics: [topic],
+        publish_status: true,
+      }),
+    })
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          console.log(result);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  };
 
   useEffect(() => {
     if (id == "new") {
@@ -104,7 +133,6 @@ const EditBlog = () => {
 
   useEffect(() => {
     if (blog.loading || blog.error || id == "new") return;
-    console.log(blog.author_id, myId);
     if (blog.author_id != myId) navigate(`/profile/${myId}`);
     setTitle(blog.title);
     setContent(blog.description);
@@ -153,7 +181,7 @@ const EditBlog = () => {
             label="Write Post"
             variant="outlined"
             multiline
-            rows={3}
+            minRows={3}
             onChange={(e) => setContent(e.target.value)}
           />
           <Stack
@@ -166,13 +194,20 @@ const EditBlog = () => {
               value={topic}
               disablePortal
               options={topics}
+              getOptionLabel={(option) =>
+                typeof option === "string" || option instanceof String
+                  ? option
+                  : ""
+              }
               renderInput={(params) => (
                 <TextField {...params} fullWidth label="Topic" />
               )}
               sx={{ flex: 1 }}
-              onChange={(e) => setTopic(e.target.value)}
+              onChange={(event, newValue) => {
+                setTopic(newValue);
+              }}
             />
-            <Button variant="contained" color="secondary">
+            <Button variant="contained" color="secondary" onClick={createBlog}>
               Post
             </Button>
           </Stack>

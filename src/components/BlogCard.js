@@ -54,7 +54,7 @@ const BlogCard = ({ data, xs, sm, md, lg, xl }) => {
             color="primary"
             sx={{ transform: "translateY(5px)" }}
           >
-            {data.topic}
+            {data.topics[0].name}
           </Typography>
           <Stack
             direction="row"
@@ -62,7 +62,7 @@ const BlogCard = ({ data, xs, sm, md, lg, xl }) => {
             alignItems="center"
           >
             <Typography variant="subtitle1" align="center" color="primary">
-              {data.author_name}
+              {data.user_details.name}
             </Typography>
             <Typography variant="subtitle2" align="center" color="primary">
               {data.created_at.slice(2, 10).replaceAll("-", "/")}

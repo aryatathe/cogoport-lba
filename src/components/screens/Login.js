@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router";
 
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
@@ -12,7 +11,7 @@ import Header from "../Header";
 
 const Login = () => {
   const [tab, setTab] = useState(false);
-  const [name, setName] = useState("xyz@gmail.com");
+  const [name, setName] = useState("xyz");
   const [email, setEmail] = useState("xyz@gmail.com");
   const [password, setPassword] = useState("password");
   const [password2, setPassword2] = useState("password");
@@ -21,54 +20,30 @@ const Login = () => {
   const myId = useSelector((state) => state.id);
   const dispatch = useDispatch();
 
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (loggedIn) navigate(`/profile/${myId}`);
-  }, [loggedIn]);
-
   const handleLogin = () => {
     const formData = new FormData();
     formData.append("email", email);
     formData.append("password", password);
 
-    fetch(`${process.env.REACT_APP_API_URL}/users`, {
-      method: "get",
-      headers: new Headers({
-        "ngrok-skip-browser-warning": "69420",
-      }),
+    fetch(`${process.env.REACT_APP_API_URL}/login`, {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({ email: email, password: password }),
     })
       .then((res) => res.json())
       .then(
         (result) => {
           console.log(result);
-          result.forEach((user) => {
-            if (user.email == email) {
-              fetch(`${process.env.REACT_APP_API_URL}/users/login`, {
-                method: "post",
-                headers: new Headers({
-                  "ngrok-skip-browser-warning": "69420",
-                }),
-                body: formData,
-              })
-                .then((res) => res.json())
-                .then(
-                  (result) => {
-                    console.log(result);
-                    dispatch({
-                      type: "LOGIN",
-                      payload: {
-                        token: result.token,
-                        email: email,
-                        id: user.id,
-                      },
-                    });
-                  },
-                  (error) => {
-                    console.log(error);
-                  }
-                );
-            }
+          dispatch({
+            type: "LOGIN",
+            payload: {
+              token: result.userDetails.token,
+              id: result.userDetails.id,
+              email: email,
+            },
           });
         },
         (error) => {
@@ -83,18 +58,29 @@ const Login = () => {
     formData.append("email", email);
     formData.append("password", password);
 
-    fetch(`${process.env.REACT_APP_API_URL}/users`, {
+    fetch(`${process.env.REACT_APP_API_URL}/sign-up`, {
       method: "post",
-      headers: new Headers({
-        "ngrok-skip-browser-warning": "69420",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password,
       }),
-      body: formData,
     })
       .then((res) => res.json())
       .then(
         (result) => {
           console.log(result);
-          handleLogin();
+          dispatch({
+            type: "LOGIN",
+            payload: {
+              token: result.userDetails.token,
+              id: result.userDetails.id,
+              email: email,
+            },
+          });
         },
         (error) => {
           console.log(error);

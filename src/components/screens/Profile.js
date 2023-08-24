@@ -43,9 +43,10 @@ const UserInfo = styled(Stack)({
 const Profile = () => {
   const [user, setUser] = useState({ loading: true });
   const [blogs, setBlogs] = useState({ loading: true });
+  const [isFollowed, setIsFollowed] = useState(false);
   const [tab, setTab] = useState(0);
 
-  const authToken = useSelector((state) => state.token);
+  const token = useSelector((state) => state.token);
   const myId = useSelector((state) => state.id);
   const dispatch = useDispatch();
 
@@ -54,60 +55,63 @@ const Profile = () => {
   const theme = useTheme();
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
 
-  useEffect(() => {
-    setUser({ loading: true });
-    fetch(`${process.env.REACT_APP_API_URL}/users/${id}`, {
-      method: "get",
-      headers: new Headers({
-        "ngrok-skip-browser-warning": "69420",
-        Authorization: `Bearer ${authToken}`,
-      }),
-    })
+  console.log(isFollowed);
+
+  const fetchUser = () => {
+    fetch(
+      `${process.env.REACT_APP_API_URL}/get-profile?token=${token}&user_id=${id}`,
+      {
+        method: "get",
+      }
+    )
       .then((res) => res.json())
       .then(
         (result) => {
           console.log(result);
-          setUser(
-            result.error
-              ? { error: true }
-              : {
-                  id: id,
-                  name: result.name,
-                  email: result.email,
-                  about: users[0].about,
-                  followers: result.followers.length,
-                  following: result.followings.length,
-                  img: users[0].img,
-                }
-          );
+          setUser(result.profile);
+          let flag = false;
+          result.profile.Followers.forEach((x) => {
+            if (x.id == myId) flag = true;
+          });
+          setIsFollowed(flag);
         },
         (error) => {
           console.log(error);
           setUser({ error: true });
         }
       );
-  }, []);
+  };
 
   useEffect(() => {
-    if (user.loading || user.error) return;
-    fetch(`${process.env.REACT_APP_API_URL}/articles`, {
-      method: "get",
-      headers: new Headers({
-        "ngrok-skip-browser-warning": "69420",
-      }),
-    })
+    setUser({ loading: true });
+    fetchUser();
+  }, []);
+
+  const follow = () => {
+    fetch(
+      `${process.env.REACT_APP_API_URL}/${
+        isFollowed ? "unfollow" : "follow"
+      }-user`,
+      {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({ token: token, author_id: id }),
+      }
+    )
       .then((res) => res.json())
       .then(
         (result) => {
           console.log(result);
-          setBlogs(result.filter((blog) => blog.author_id == id));
+          fetchUser();
         },
         (error) => {
           console.log(error);
-          setBlogs({ error: true });
         }
       );
-  }, [user]);
+  };
 
   return (
     <>
@@ -121,7 +125,7 @@ const Profile = () => {
           <Grid item xs={12} sm={4} lg={3} xl={2}>
             <UserInfo direction="column" alignItems="center" spacing={2}>
               <Box id="pfp">
-                <img src={user.img} />
+                <img src={user.profile_pic_url} />
               </Box>
               <Typography variant="h3" color="secondary">
                 {user.name}
@@ -130,7 +134,7 @@ const Profile = () => {
                 {user.about}
               </Typography>
               <Typography variant="subtitle1" color="secondary">
-                {user.followers} Followers
+                {user.followers_count} Followers
               </Typography>
               <Stack id="button-area" direction="row" spacing={1}>
                 {id == myId ? (
@@ -152,8 +156,8 @@ const Profile = () => {
                     </Button>
                   </>
                 ) : (
-                  <Button variant="outlined" color="secondary">
-                    Follow
+                  <Button variant="outlined" color="secondary" onClick={follow}>
+                    {isFollowed ? "Unfollow" : "Follow"}
                   </Button>
                 )}
               </Stack>
