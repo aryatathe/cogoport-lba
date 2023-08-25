@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { useNavigate } from "react-router";
 
+import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -12,6 +13,50 @@ import Tab from "@mui/material/Tab";
 import { styled } from "@mui/material/styles";
 
 import Header from "../Header";
+
+import tempImage from "../../images/pfp.png";
+
+const convertBase64 = (file) => {
+  return new Promise((resolve, reject) => {
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(file);
+
+    fileReader.onload = () => {
+      resolve(fileReader.result);
+    };
+
+    fileReader.onerror = (error) => {
+      reject(error);
+    };
+  });
+};
+
+const ImageBox = styled(Box)({
+  minWidth: "200px",
+  maxWidth: "300px",
+  position: "relative",
+  borderRadius: "50%",
+  overflow: "hidden",
+  aspectRatio: "1/1",
+  "& .MuiStack-root": {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+    background: "#2e282acc",
+    opacity: 0,
+    transition: "all 0.2s ease",
+    "&:hover": {
+      opacity: 1,
+    },
+  },
+  "& img": {
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+  },
+});
 
 const LoginInput = styled(TextField)({
   "& label": {
@@ -30,8 +75,11 @@ const LoginInput = styled(TextField)({
 
 const EditProfile = () => {
   const [tab, setTab] = useState(0);
-  const [data, setData] = useState({ name: "", about: "" });
-
+  const [data, setData] = useState({
+    name: "",
+    about: "",
+    pfp: tempImage,
+  });
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -131,6 +179,27 @@ const EditProfile = () => {
       >
         {tab == 0 ? (
           <>
+            <ImageBox>
+              <img src={data.pfp}></img>
+              <Stack alignItems="center" justifyContent="center">
+                <Button variant="contained" color="secondary" component="label">
+                  Upload Image
+                  <input
+                    type="file"
+                    hidden
+                    onChange={async (e) => {
+                      const file = e.target.files[0];
+                      console.log(URL.createObjectURL(file));
+                      const base64 = await convertBase64(file);
+                      setData({
+                        ...data,
+                        pfp: base64,
+                      });
+                    }}
+                  />
+                </Button>
+              </Stack>
+            </ImageBox>
             <LoginInput
               label="Name"
               value={data.name ? data.name : ""}

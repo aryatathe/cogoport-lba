@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 
 import Grid from "@mui/material/Grid";
-import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
@@ -52,60 +52,58 @@ const Home = () => {
   return (
     <>
       <Header />
-      <Stack
-        direction="row"
-        alignItems="stretch"
-        spacing={sm ? 1 : md ? 2 : 3}
-        sx={{ padding: md ? "20px 20px 0 20px" : "30px" }}
-      >
-        <TextField
-          variant="outlined"
-          label="Search"
-          size={sm ? "small" : "medium"}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton disableRipple edge="end">
-                  <SearchIcon color="secondary" />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-          sx={{ flex: 1 }}
-        />
-        <IconButton disableRipple onClick={() => setFilterToggle(true)}>
-          <FilterAltIcon color="secondary" fontSize={sm ? "medium" : "large"} />
-        </IconButton>
-        <FilterArea
-          visible={filterToggle}
-          close={() => setFilterToggle(false)}
-        />
-      </Stack>
-      {blogs.loading || blogs.error ? (
-        <ErrorBox
-          message={blogs.loading ? "Loading..." : "Couldn't load blogs"}
-        />
-      ) : (
-        <Grid
-          container
-          spacing={sm ? 2 : md ? 3 : 4}
-          sx={{ padding: md ? "20px" : "30px" }}
+      <Box sx={{ maxWidth: "800px", margin: "auto" }}>
+        <Stack
+          direction="row"
+          alignItems="stretch"
+          spacing={{ xs: 1, sm: 2, md: 3 }}
+          sx={{ padding: { xs: "20px 20px 0 20px", md: "30px" } }}
         >
-          {blogs.map((blog, i) => {
-            return (
-              <BlogCard
-                key={i}
-                data={blog}
-                xs={12}
-                sm={6}
-                md={4}
-                lg={3}
-                xl={2}
-              />
-            );
-          })}
-        </Grid>
-      )}
+          <TextField
+            variant="outlined"
+            label="Search"
+            size={sm ? "small" : "medium"}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton disableRipple edge="end">
+                    <SearchIcon color="secondary" />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+            sx={{ flex: 1 }}
+          />
+          <IconButton disableRipple onClick={() => setFilterToggle(true)}>
+            <FilterAltIcon
+              color="secondary"
+              fontSize={sm ? "medium" : "large"}
+            />
+          </IconButton>
+          <FilterArea
+            visible={filterToggle}
+            close={() => setFilterToggle(false)}
+          />
+        </Stack>
+        {blogs.loading || blogs.error ? (
+          <ErrorBox
+            message={blogs.loading ? "Loading..." : "Couldn't load blogs"}
+          />
+        ) : (
+          <Stack
+            direction="column"
+            alignItems="stretch"
+            spacing={{ xs: 2, sm: 3, md: 4 }}
+            sx={{
+              padding: { xs: "20px", md: "30px" },
+            }}
+          >
+            {blogs.map((blog, i) => {
+              return <BlogCard key={i} data={blog} />;
+            })}
+          </Stack>
+        )}
+      </Box>
     </>
   );
 };

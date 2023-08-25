@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { NavLink, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import Stack from "@mui/material/Stack";
@@ -20,13 +20,6 @@ import ErrorBox from "../ErrorBox";
 //import blogs from "../../content/blogs";
 import users from "../../content/users";
 
-const BlogList = styled(Grid)(({ theme }) => ({
-  padding: "20px 20px 20px 0",
-  [theme.breakpoints.down("sm")]: {
-    padding: "10px",
-  },
-}));
-
 const UserInfo = styled(Stack)({
   padding: "40px 20px",
   "& #pfp": {
@@ -40,9 +33,26 @@ const UserInfo = styled(Stack)({
   },
 });
 
+const UserListItem = styled(Stack)(({ theme }) => ({
+  transition: "all 0.2s ease",
+  cursor: "pointer",
+  "& .image-box": {
+    minWidth: "80px",
+    minHeight: "80px",
+    maxWidth: "80px",
+    maxHeight: "80px",
+    borderRadius: "50%",
+    overflow: "hidden",
+  },
+  "&:hover": {
+    transform: "scale(1.03)",
+  },
+}));
+
 const Profile = () => {
   const [user, setUser] = useState({ loading: true });
   const [blogs, setBlogs] = useState({ loading: true });
+  const [bookmarks, setBookmarks] = useState({ loading: true });
   const [isFollowed, setIsFollowed] = useState(false);
   const [tab, setTab] = useState(0);
 
@@ -54,8 +64,6 @@ const Profile = () => {
 
   const theme = useTheme();
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
-
-  console.log(isFollowed);
 
   const fetchUser = () => {
     fetch(
@@ -82,10 +90,45 @@ const Profile = () => {
       );
   };
 
-  useEffect(() => {
-    setUser({ loading: true });
-    fetchUser();
-  }, []);
+  const fetchBlogs = () => {
+    fetch(
+      `${process.env.REACT_APP_API_URL}/view-posts?token=${token}&author_id=${id}`,
+      {
+        method: "get",
+      }
+    )
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          console.log(result);
+          setBlogs(result.posts);
+        },
+        (error) => {
+          console.log(error);
+          setBlogs({ error: true });
+        }
+      );
+  };
+
+  const fetchBookmarks = () => {
+    fetch(
+      `${process.env.REACT_APP_API_URL}/get-save-laters?token=${token}&author_id=${id}`,
+      {
+        method: "get",
+      }
+    )
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          console.log(result);
+          setBookmarks(result.savelaters);
+        },
+        (error) => {
+          console.log(error);
+          setBookmarks({ error: true });
+        }
+      );
+  };
 
   const follow = () => {
     fetch(
@@ -113,6 +156,16 @@ const Profile = () => {
       );
   };
 
+  useEffect(() => {
+    setTab(0);
+    setUser({ loading: true });
+    setBlogs({ loading: true });
+    setBookmarks({ loading: true });
+    fetchUser();
+    fetchBlogs();
+    fetchBookmarks();
+  }, [id]);
+
   return (
     <>
       <Header />
@@ -122,10 +175,10 @@ const Profile = () => {
         />
       ) : (
         <Grid container>
-          <Grid item xs={12} sm={4} lg={3} xl={2}>
+          <Grid item xs={12} md={4} lg={3} xl={2}>
             <UserInfo direction="column" alignItems="center" spacing={2}>
               <Box id="pfp">
-                <img src={user.profile_pic_url} />
+                <img src={user.pfp} />
               </Box>
               <Typography variant="h3" color="secondary">
                 {user.name}
@@ -134,7 +187,8 @@ const Profile = () => {
                 {user.about}
               </Typography>
               <Typography variant="subtitle1" color="secondary">
-                {user.followers_count} Followers
+                {user.followers_count} Follower
+                {user.followers_count != 1 ? "s" : ""}
               </Typography>
               <Stack id="button-area" direction="row" spacing={1}>
                 {id == myId ? (
@@ -142,7 +196,7 @@ const Profile = () => {
                     <Button
                       variant="outlined"
                       color="secondary"
-                      component={NavLink}
+                      component={Link}
                       to="/profile/edit"
                     >
                       Edit
@@ -163,7 +217,7 @@ const Profile = () => {
               </Stack>
             </UserInfo>
           </Grid>
-          <Grid item xs={12} sm={8} lg={9} xl={10}>
+          <Grid item xs={12} md={8} lg={9} xl={10}>
             <Tabs
               value={tab}
               onChange={(e, newVal) => {
@@ -172,10 +226,8 @@ const Profile = () => {
               textColor="primary"
               indicatorColor="primary"
               sx={{ marginTop: "40px" }}
-              centered={!sm}
-              variant={sm ? "scrollable" : "standard"}
-              scrollButtons
-              allowScrollButtonsMobile
+              centered={{ xs: true, md: false }}
+              variant={{ xs: "scrollable", sm: "standard" }}
             >
               <Tab
                 label="Posts"
@@ -183,51 +235,96 @@ const Profile = () => {
                 disableRipple
                 size={sm ? "small" : "medium"}
               />
+              {id == myId && (
+                <Tab
+                  label="Bookmarks"
+                  value={1}
+                  disableRipple
+                  size={sm ? "small" : "medium"}
+                />
+              )}
+              {id == myId && (
+                <Tab
+                  label="Drafts"
+                  value={2}
+                  disableRipple
+                  size={sm ? "small" : "medium"}
+                />
+              )}
               <Tab
                 label="Followers"
-                value={1}
+                value={3}
                 disableRipple
                 size={sm ? "small" : "medium"}
               />
               <Tab
                 label="Following"
-                value={2}
+                value={4}
                 disableRipple
                 size={sm ? "small" : "medium"}
               />
             </Tabs>
-            {tab == 0 ? (
+            {tab < 3 ? (
               blogs.loading || blogs.error ? (
                 <ErrorBox
-                  message={user.loading ? "Loading..." : "Couldn't load blogs"}
+                  message={blogs.loading ? "Loading..." : "Couldn't load blogs"}
                 />
               ) : (
-                <BlogList container spacing={3}>
+                <Stack
+                  direction="column"
+                  spacing={3}
+                  sx={{
+                    padding: "20px 20px 20px 0",
+                    [theme.breakpoints.down("md")]: {
+                      padding: "30px 10px",
+                    },
+                  }}
+                >
                   {blogs.loading ? (
                     <div>Loading</div>
                   ) : blogs.error ? (
                     <div>error</div>
                   ) : (
-                    blogs.map((blog, i) => {
-                      return (
-                        <BlogCard
-                          key={i}
-                          data={blog}
-                          xs={12}
-                          sm={12}
-                          md={6}
-                          lg={4}
-                          xl={3}
-                        />
-                      );
+                    (tab == 0
+                      ? blogs
+                      : bookmarks.map((x) => x.post_details)
+                    ).map((blog, i) => {
+                      return <BlogCard key={i} data={blog} />;
                     })
                   )}
-                </BlogList>
+                </Stack>
               )
-            ) : tab == 1 ? (
-              <div>followers</div>
             ) : (
-              <div>following</div>
+              <Stack
+                direction="row"
+                justifyContent="center"
+                flexWrap="wrap"
+                spacing={{ xs: 3, md: 4 }}
+                sx={{
+                  padding: "40px 20px 20px 0",
+                  maxWidth: "500px",
+                  margin: "auto",
+                  [theme.breakpoints.down("md")]: {
+                    padding: "30px 10px",
+                  },
+                }}
+              >
+                {(tab == 3 ? user.Followers : user.Following).map((f, i) => (
+                  <Link to={`/profile/${f.id}`}>
+                    <UserListItem
+                      key={f.name}
+                      direction="column"
+                      alignItems="center"
+                      spacing={1}
+                    >
+                      <Box className="image-box">
+                        <img src={f.pfp} />
+                      </Box>
+                      <Typography variant="h4">{f.name}</Typography>
+                    </UserListItem>
+                  </Link>
+                ))}
+              </Stack>
             )}
           </Grid>
         </Grid>

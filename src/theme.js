@@ -28,18 +28,24 @@ const theme = createTheme({
       [breakpointTheme.breakpoints.down("sm")]: { fontSize: 32 },
     },
     h3: {
-      fontSize: 28,
+      fontSize: 36,
       fontWeight: "bold",
+      [breakpointTheme.breakpoints.down("md")]: { fontSize: 32 },
+      [breakpointTheme.breakpoints.down("sm")]: { fontSize: 26 },
     },
     h4: {
       fontSize: 24,
       fontWeight: "bold",
     },
     subtitle1: {
-      fontSize: 16,
+      fontSize: 20,
+      [breakpointTheme.breakpoints.down("md")]: { fontSize: 18 },
+      [breakpointTheme.breakpoints.down("sm")]: { fontSize: 16 },
     },
     subtitle2: {
-      fontSize: 14,
+      fontSize: 18,
+      [breakpointTheme.breakpoints.down("md")]: { fontSize: 16 },
+      [breakpointTheme.breakpoints.down("sm")]: { fontSize: 14 },
     },
     body1: {
       fontSize: 16,
@@ -74,6 +80,7 @@ const theme = createTheme({
         },
         a: {
           textDecoration: "none",
+          color: "inherit",
         },
         img: {
           width: "100%",
