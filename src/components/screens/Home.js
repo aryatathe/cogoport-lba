@@ -40,7 +40,8 @@ const Home = () => {
       .then(
         (result) => {
           console.log(result);
-          setBlogs(result.posts);
+          if (result.status == 200) setBlogs(result.posts);
+          else setBlogs({ error: true });
         },
         (error) => {
           console.log(error);
@@ -50,61 +51,55 @@ const Home = () => {
   }, []);
 
   return (
-    <>
-      <Header />
-      <Box sx={{ maxWidth: "800px", margin: "auto" }}>
+    <Box sx={{ maxWidth: "800px", margin: "auto" }}>
+      <Stack
+        direction="row"
+        alignItems="stretch"
+        spacing={{ xs: 1, sm: 2, md: 3 }}
+        sx={{ padding: { xs: "20px 20px 0 20px", md: "30px" } }}
+      >
+        <TextField
+          variant="outlined"
+          label="Search"
+          size={sm ? "small" : "medium"}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton disableRipple edge="end">
+                  <SearchIcon color="secondary" />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+          sx={{ flex: 1 }}
+        />
+        <IconButton disableRipple onClick={() => setFilterToggle(true)}>
+          <FilterAltIcon color="secondary" fontSize={sm ? "medium" : "large"} />
+        </IconButton>
+        <FilterArea
+          visible={filterToggle}
+          close={() => setFilterToggle(false)}
+        />
+      </Stack>
+      {blogs.loading || blogs.error ? (
+        <ErrorBox
+          message={blogs.loading ? "Loading..." : "Couldn't load blogs"}
+        />
+      ) : (
         <Stack
-          direction="row"
+          direction="column"
           alignItems="stretch"
-          spacing={{ xs: 1, sm: 2, md: 3 }}
-          sx={{ padding: { xs: "20px 20px 0 20px", md: "30px" } }}
+          spacing={{ xs: 2, sm: 3, md: 4 }}
+          sx={{
+            padding: { xs: "20px", md: "30px" },
+          }}
         >
-          <TextField
-            variant="outlined"
-            label="Search"
-            size={sm ? "small" : "medium"}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton disableRipple edge="end">
-                    <SearchIcon color="secondary" />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-            sx={{ flex: 1 }}
-          />
-          <IconButton disableRipple onClick={() => setFilterToggle(true)}>
-            <FilterAltIcon
-              color="secondary"
-              fontSize={sm ? "medium" : "large"}
-            />
-          </IconButton>
-          <FilterArea
-            visible={filterToggle}
-            close={() => setFilterToggle(false)}
-          />
+          {blogs.map((blog, i) => {
+            return <BlogCard key={i} data={blog} />;
+          })}
         </Stack>
-        {blogs.loading || blogs.error ? (
-          <ErrorBox
-            message={blogs.loading ? "Loading..." : "Couldn't load blogs"}
-          />
-        ) : (
-          <Stack
-            direction="column"
-            alignItems="stretch"
-            spacing={{ xs: 2, sm: 3, md: 4 }}
-            sx={{
-              padding: { xs: "20px", md: "30px" },
-            }}
-          >
-            {blogs.map((blog, i) => {
-              return <BlogCard key={i} data={blog} />;
-            })}
-          </Stack>
-        )}
-      </Box>
-    </>
+      )}
+    </Box>
   );
 };
 

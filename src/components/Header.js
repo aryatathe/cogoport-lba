@@ -1,5 +1,7 @@
 import { useState } from "react";
+
 import { NavLink } from "react-router-dom";
+
 import { useSelector } from "react-redux";
 
 import Stack from "@mui/material/Stack";
@@ -38,6 +40,7 @@ const NavButton = styled(Button)(({ theme }) => ({
 const NavButtons = () => {
   const token = useSelector((state) => state.token);
   const myId = useSelector((state) => state.id);
+
   return (
     <>
       <NavButton
@@ -67,6 +70,7 @@ const Header = () => {
 
   const theme = useTheme();
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
     <HeaderContainer
       direction="row"

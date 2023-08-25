@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 
 import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -75,6 +76,7 @@ const LoginInput = styled(TextField)({
 
 const EditProfile = () => {
   const [tab, setTab] = useState(0);
+  const [message, setMessage] = useState("");
   const [data, setData] = useState({
     name: "",
     about: "",
@@ -87,8 +89,6 @@ const EditProfile = () => {
   const myId = useSelector((state) => state.id);
 
   const navigate = useNavigate();
-
-  console.log(data);
 
   useEffect(() => {
     if (token == "") {
@@ -126,6 +126,7 @@ const EditProfile = () => {
       .then(
         (result) => {
           console.log(result);
+          setMessage(result.msg);
         },
         (error) => {
           console.log(error);
@@ -146,6 +147,7 @@ const EditProfile = () => {
       .then(
         (result) => {
           console.log(result);
+          setMessage(result.msg);
         },
         (error) => {
           console.log(error);
@@ -155,7 +157,6 @@ const EditProfile = () => {
 
   return (
     <>
-      <Header />
       <Tabs
         value={tab}
         onChange={(e, newVal) => {
@@ -175,7 +176,7 @@ const EditProfile = () => {
         direction="column"
         alignItems="center"
         spacing={1}
-        sx={{ marginTop: "40px" }}
+        sx={{ margin: "40px 0" }}
       >
         {tab == 0 ? (
           <>
@@ -233,12 +234,17 @@ const EditProfile = () => {
         <Button
           variant="contained"
           color="secondary"
-          sx={{ marginTop: "30px !important" }}
+          sx={{ margin: "30px 0 !important" }}
           onClick={tab == 0 ? updateProfile : updatePassword}
           disabled={tab == 1 && password != confirmPassword}
         >
           {tab == 0 ? "Save" : "Update"}
         </Button>
+        {message != "" && (
+          <Typography variant="body2" align="center" color="#e8ff59">
+            {message}
+          </Typography>
+        )}
       </Stack>
     </>
   );

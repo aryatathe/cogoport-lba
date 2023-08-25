@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import { useNavigate } from "react-router";
+
 import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Tabs from "@mui/material/Tabs";
@@ -11,20 +14,22 @@ import Header from "../Header";
 
 const Login = () => {
   const [tab, setTab] = useState(false);
-  const [name, setName] = useState("xyz");
+  const [message, setMessage] = useState("");
   const [email, setEmail] = useState("xyz@gmail.com");
   const [password, setPassword] = useState("password");
   const [password2, setPassword2] = useState("password");
 
-  const loggedIn = useSelector((state) => state.isLoggedIn);
+  const token = useSelector((state) => state.token);
   const myId = useSelector((state) => state.id);
   const dispatch = useDispatch();
 
-  const handleLogin = () => {
-    const formData = new FormData();
-    formData.append("email", email);
-    formData.append("password", password);
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    if (token != "") navigate(`/profile/${myId}`, { replace: true });
+  }, [myId]);
+
+  const handleLogin = () => {
     fetch(`${process.env.REACT_APP_API_URL}/login`, {
       method: "post",
       headers: {
@@ -37,14 +42,16 @@ const Login = () => {
       .then(
         (result) => {
           console.log(result);
-          dispatch({
-            type: "LOGIN",
-            payload: {
-              token: result.userDetails.token,
-              id: result.userDetails.id,
-              email: email,
-            },
-          });
+          if (result.status == "200")
+            dispatch({
+              type: "LOGIN",
+              payload: {
+                token: result.userDetails.token,
+                id: result.userDetails.id,
+                email: email,
+              },
+            });
+          else setMessage(result.msg);
         },
         (error) => {
           console.log(error);
@@ -53,11 +60,6 @@ const Login = () => {
   };
 
   const handleSignup = () => {
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("email", email);
-    formData.append("password", password);
-
     fetch(`${process.env.REACT_APP_API_URL}/sign-up`, {
       method: "post",
       headers: {
@@ -73,14 +75,16 @@ const Login = () => {
       .then(
         (result) => {
           console.log(result);
-          dispatch({
-            type: "LOGIN",
-            payload: {
-              token: result.userDetails.token,
-              id: result.userDetails.id,
-              email: email,
-            },
-          });
+          if (result.status == 200)
+            dispatch({
+              type: "LOGIN",
+              payload: {
+                token: result.userDetails.token,
+                id: result.userDetails.id,
+                email: email,
+              },
+            });
+          else setMessage(result.msg);
         },
         (error) => {
           console.log(error);
@@ -90,7 +94,6 @@ const Login = () => {
 
   return (
     <>
-      <Header />
       <Tabs
         value={tab ? 1 : 0}
         onChange={(e, newVal) => {
@@ -110,16 +113,8 @@ const Login = () => {
         direction="column"
         alignItems="center"
         spacing={1}
-        sx={{ marginTop: "40px" }}
+        sx={{ margin: "40px 0" }}
       >
-        {tab && (
-          <TextField
-            label="Name"
-            variant="standard"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        )}
         <TextField
           label="Email"
           variant="standard"
@@ -143,16 +138,19 @@ const Login = () => {
         <Button
           variant="contained"
           color="secondary"
-          sx={{ marginTop: "30px !important" }}
+          sx={{ margin: "30px 0 !important" }}
           onClick={tab ? handleSignup : handleLogin}
           disabled={
-            email == "" ||
-            password == "" ||
-            (tab && (name == "" || password != password2))
+            email == "" || password == "" || (tab && password != password2)
           }
         >
           {tab ? "Sign Up" : "Login"}
         </Button>
+        {message != "" && (
+          <Typography variant="body2" align="center" color="#e8ff59">
+            {message}
+          </Typography>
+        )}
       </Stack>
     </>
   );
