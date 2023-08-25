@@ -22,7 +22,8 @@ import ErrorBox from "../ErrorBox";
 import topics from "../../content/topics";
 
 const Home = () => {
-  const [filterToggle, setFilterToggle] = useState(false);
+  const [filterToggle, setFilterToggle] = useState(true);
+  const [filterTopic, setFilterTopic] = useState(topics.map(() => true));
   const [blogs, setBlogs] = useState({ loading: true });
 
   const token = useSelector((state) => state.token);
@@ -30,6 +31,9 @@ const Home = () => {
   const theme = useTheme();
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
   const md = useMediaQuery(theme.breakpoints.down("md"));
+
+  const topicResults = topics.filter((topic, i) => filterTopic[i]);
+  console.log(topicResults);
 
   useEffect(() => {
     setBlogs({ loading: true });
@@ -79,6 +83,8 @@ const Home = () => {
         <FilterArea
           visible={filterToggle}
           close={() => setFilterToggle(false)}
+          filterTopic={filterTopic}
+          setFilterTopic={setFilterTopic}
         />
       </Stack>
       {blogs.loading || blogs.error ? (
@@ -94,9 +100,11 @@ const Home = () => {
             padding: { xs: "20px", md: "30px" },
           }}
         >
-          {blogs.map((blog, i) => {
-            return <BlogCard key={i} data={blog} />;
-          })}
+          {blogs
+            .filter((blog) => topicResults.includes(blog.topics[0].name))
+            .map((blog, i) => {
+              return <BlogCard key={i} data={blog} />;
+            })}
         </Stack>
       )}
     </Box>

@@ -52,7 +52,6 @@ const BlogCardPaper = styled(Paper)(({ theme }) => ({
 }));
 
 const BlogCard = ({ data }) => {
-  console.log(data);
   return (
     <Link to={`/blog/${data.id}`}>
       <BlogCardPaper

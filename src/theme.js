@@ -69,6 +69,12 @@ const theme = createTheme({
       dark: "#ffc9b5",
       contrastText: "#2e282a",
     },
+    action: {
+      main: "#2e282a",
+      light: "#2e282a",
+      dark: "#2e282a",
+      contrastText: "#e3fcef",
+    },
   },
   components: {
     MuiCssBaseline: {
@@ -192,6 +198,15 @@ const theme = createTheme({
         },
       },
     },
+    MuiDialog: {
+      styleOverrides: {
+        paper: {
+          background: "#2e282a",
+          padding: "20px",
+          color: "inherit",
+        },
+      },
+    },
     MuiDrawer: {
       styleOverrides: {
         paper: {
@@ -221,6 +236,13 @@ const theme = createTheme({
         },
         content: {
           "&.Mui-expanded": { margin: "12px 0" },
+        },
+      },
+    },
+    MuiCheckbox: {
+      styleOverrides: {
+        root: {
+          color: "#e2fcef77",
         },
       },
     },

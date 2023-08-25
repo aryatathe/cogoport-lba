@@ -18,7 +18,16 @@ import { styled } from "@mui/material/styles";
 import topics from "../content/topics";
 import users from "../content/users";
 
-const FilterArea = ({ visible, close }) => {
+const FilterArea = ({ visible, close, filterTopic, setFilterTopic }) => {
+  const topicCheck = (check, i) => {
+    setFilterTopic((filterTopic) => {
+      return filterTopic.map((f, j) => (i == j ? check : f));
+    });
+  };
+
+  const topicCheckAll = topics.map(() => true);
+  const topicCheckNone = topics.map(() => false);
+
   return (
     <Drawer
       anchor="right"
@@ -40,9 +49,29 @@ const FilterArea = ({ visible, close }) => {
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
-            {topics.map((topic) => (
-              <Stack direction="row" alignItems="center">
-                <Checkbox defaultChecked size="small" />
+            <Stack direction="row" alignItems="center">
+              <Checkbox
+                size="small"
+                color="primary"
+                checked={
+                  JSON.stringify(filterTopic) == JSON.stringify(topicCheckAll)
+                }
+                onChange={(e) =>
+                  setFilterTopic(
+                    e.target.checked ? topicCheckAll : topicCheckNone
+                  )
+                }
+              />
+              <Typography variant="body2">All</Typography>
+            </Stack>
+            {topics.map((topic, i) => (
+              <Stack key={topic} direction="row" alignItems="center">
+                <Checkbox
+                  size="small"
+                  color="primary"
+                  checked={filterTopic[i]}
+                  onChange={(e) => topicCheck(e.target.checked, i)}
+                />
                 <Typography variant="body2">{topic}</Typography>
               </Stack>
             ))}

@@ -20,9 +20,11 @@ import BookmarkIcon from "@mui/icons-material/Bookmark";
 import EditIcon from "@mui/icons-material/Edit";
 import AddCommentOutlinedIcon from "@mui/icons-material/AddCommentOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import PlaylistAddOutlinedIcon from "@mui/icons-material/PlaylistAddOutlined";
 
 import Header from "../Header";
 import ErrorBox from "../ErrorBox";
+import ListsPopup from "../ListsPopup";
 
 import tempImage from "../../images/blog-temp.jpg";
 
@@ -65,6 +67,7 @@ const Blog = () => {
   const [isLiked, setIsLiked] = useState(false);
   const [bookmarkId, setBookmarkId] = useState(-1);
   const [commentInput, setCommentInput] = useState("");
+  const [popup, setPopup] = useState(false);
 
   const token = useSelector((state) => state.token);
   const myId = useSelector((state) => state.id);
@@ -229,6 +232,12 @@ const Blog = () => {
       sx={{ padding: "40px 20px 20px 20px" }}
       justifyContent="center"
     >
+      <ListsPopup
+        isOpen={popup}
+        close={() => setPopup(false)}
+        id={blog.id}
+        type="blog"
+      />
       <BlogContainer item xs={12} lg={8}>
         <Typography variant="h2" color="secondary" align="center">
           {blog.title}
@@ -307,15 +316,21 @@ const Blog = () => {
                       <FavoriteBorderIcon fontSize="large" color="secondary" />
                     )}
                   </IconButton>
+                  <IconButton disableRipple onClick={bookmark}>
+                    {bookmarkId < 0 ? (
+                      <BookmarkBorderIcon fontSize="large" color="secondary" />
+                    ) : (
+                      <BookmarkIcon fontSize="large" color="secondary" />
+                    )}
+                  </IconButton>
+                  <IconButton disableRipple onClick={() => setPopup(true)}>
+                    <PlaylistAddOutlinedIcon
+                      fontSize="large"
+                      color="secondary"
+                    />
+                  </IconButton>
                 </>
               )}
-              <IconButton disableRipple onClick={bookmark}>
-                {bookmarkId < 0 ? (
-                  <BookmarkBorderIcon fontSize="large" color="secondary" />
-                ) : (
-                  <BookmarkIcon fontSize="large" color="secondary" />
-                )}
-              </IconButton>
             </>
           ) : (
             <></>

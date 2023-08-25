@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 
 import Login from "./components/screens/Login";
 import Home from "./components/screens/Home";
+import Lists from "./components/screens/Lists";
 import Blog from "./components/screens/Blog";
 import Profile from "./components/screens/Profile";
 import EditProfile from "./components/screens/EditProfile";
@@ -40,11 +41,15 @@ const app = createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
+    errorElement: <div>404</div>,
     children: [
       {
         path: "",
         element: <Home />,
-        errorElement: <div>404</div>,
+      },
+      {
+        path: "lists",
+        element: <Lists />,
       },
       {
         path: "login",

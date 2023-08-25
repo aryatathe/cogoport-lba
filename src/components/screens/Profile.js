@@ -6,7 +6,9 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Tabs from "@mui/material/Tabs";
@@ -14,6 +16,8 @@ import Tab from "@mui/material/Tab";
 
 import { styled, useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+
+import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 
 import Header from "../Header";
 import BlogCard from "../BlogCard";
@@ -51,12 +55,27 @@ const UserListItem = styled(Stack)(({ theme }) => ({
   },
 }));
 
+function loadScript(src) {
+  return new Promise((resolve) => {
+    const script = document.createElement("script");
+    script.src = src;
+    script.onload = () => {
+      resolve(true);
+    };
+    script.onerror = () => {
+      resolve(false);
+    };
+    document.body.appendChild(script);
+  });
+}
+
 const Profile = () => {
   const [user, setUser] = useState({ loading: true });
   const [blogs, setBlogs] = useState({ loading: true });
   const [bookmarks, setBookmarks] = useState({ loading: true });
   const [isFollowed, setIsFollowed] = useState(false);
   const [tab, setTab] = useState(0);
+  const [payment, setPayment] = useState(0);
 
   const token = useSelector((state) => state.token);
   const myId = useSelector((state) => state.id);
@@ -176,6 +195,17 @@ const Profile = () => {
     fetchBookmarks();
   }, [id]);
 
+  async function displayRazorpay() {
+    const res = await loadScript(
+      "https://checkout.razorpay.com/v1/checkout.js"
+    );
+
+    if (!res) {
+      alert("Razorpay SDK failed to load...");
+      return;
+    }
+  }
+
   return user.loading || user.error ? (
     <ErrorBox message={user.loading ? "Loading..." : "Couldn't load user"} />
   ) : (
@@ -223,6 +253,27 @@ const Profile = () => {
               </Button>
             )}
           </Stack>
+          {user.id == myId && (
+            <>
+              <Typography variant="body1">
+                <strong>{user.num_of_posts_left}</strong> blog views remaining
+              </Typography>
+              <Stack direction="row" alignItems="center">
+                <TextField
+                  value={payment}
+                  label="Purchase"
+                  variant="outlined"
+                  fullWidth
+                  size="small"
+                  type="number"
+                  onChange={(e) => setPayment(e.target.value)}
+                />
+                <IconButton disableRipple onClick={displayRazorpay}>
+                  <AddOutlinedIcon color="secondary" fontSize="large" />
+                </IconButton>
+              </Stack>
+            </>
+          )}
         </UserInfo>
       </Grid>
       <Grid item xs={12} md={8} lg={9} xl={10}>
@@ -279,6 +330,9 @@ const Profile = () => {
             sx={{
               padding: "20px 20px 20px 0",
               [theme.breakpoints.down("md")]: {
+                padding: "30px 20px",
+              },
+              [theme.breakpoints.down("sm")]: {
                 padding: "30px 10px",
               },
             }}
