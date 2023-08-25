@@ -284,9 +284,8 @@ const Profile = () => {
           }}
           textColor="primary"
           indicatorColor="primary"
-          sx={{ marginTop: "40px" }}
-          centered={{ xs: true, md: false }}
-          variant={{ xs: "scrollable", sm: "standard" }}
+          sx={{ maxWidth: "fit-content", margin: "auto", marginTop: "40px" }}
+          variant="scrollable"
         >
           <Tab
             label="Posts"

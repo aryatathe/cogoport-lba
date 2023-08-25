@@ -51,11 +51,11 @@ const NavButtons = () => {
       >
         <CreateIcon fontSize="large" color="#2b282a" />
       </NavButton>
+      <NavButton variant="outlined" component={NavLink} to="/">
+        Browse
+      </NavButton>
       <NavButton variant="outlined" component={NavLink} to="/lists">
         Lists
-      </NavButton>
-      <NavButton variant="outlined" component={NavLink} to="/">
-        Read
       </NavButton>
       <NavButton
         variant="outlined"

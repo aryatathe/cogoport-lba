@@ -7,6 +7,8 @@ import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
 
 import { styled, useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -22,8 +24,12 @@ import ErrorBox from "../ErrorBox";
 import topics from "../../content/topics";
 
 const Home = () => {
-  const [filterToggle, setFilterToggle] = useState(true);
+  const [tab, setTab] = useState(0);
+  const [search, setSearch] = useState("");
+  const [filterToggle, setFilterToggle] = useState(false);
   const [filterTopic, setFilterTopic] = useState(topics.map(() => true));
+  const [filterAuthor, setFilterAuthor] = useState([]);
+  const [sortState, setSortState] = useState(0);
   const [blogs, setBlogs] = useState({ loading: true });
 
   const token = useSelector((state) => state.token);
@@ -33,26 +39,45 @@ const Home = () => {
   const md = useMediaQuery(theme.breakpoints.down("md"));
 
   const topicResults = topics.filter((topic, i) => filterTopic[i]);
-  console.log(topicResults);
 
   useEffect(() => {
     setBlogs({ loading: true });
-    fetch(`${process.env.REACT_APP_API_URL}/view-posts?token=${token}`, {
-      method: "get",
-    })
+    fetch(
+      `${process.env.REACT_APP_API_URL}/${
+        tab == 0
+          ? "view-posts"
+          : tab == 1
+          ? "get-top-posts"
+          : "get-recommendations"
+      }?token=${token}`,
+      {
+        method: "get",
+      }
+    )
       .then((res) => res.json())
       .then(
         (result) => {
           console.log(result);
-          if (result.status == 200) setBlogs(result.posts);
-          else setBlogs({ error: true });
+          let list = result.posts ? result.posts : result.recommendations;
+          if (result.status == 200) {
+            let userSet = [];
+            list.forEach((blog) => {
+              if (userSet.includes(blog.user_details.name));
+              else userSet.push(blog.user_details.name);
+            });
+            let obj = userSet.reduce((acc, value) => {
+              return { ...acc, [value]: true };
+            }, {});
+            setFilterAuthor(obj);
+            setBlogs(list);
+          } else setBlogs({ error: true });
         },
         (error) => {
           console.log(error);
           setBlogs({ error: true });
         }
       );
-  }, []);
+  }, [tab]);
 
   return (
     <Box sx={{ maxWidth: "800px", margin: "auto" }}>
@@ -64,6 +89,7 @@ const Home = () => {
       >
         <TextField
           variant="outlined"
+          value={search}
           label="Search"
           size={sm ? "small" : "medium"}
           InputProps={{
@@ -75,6 +101,7 @@ const Home = () => {
               </InputAdornment>
             ),
           }}
+          onChange={(e) => setSearch(e.target.value)}
           sx={{ flex: 1 }}
         />
         <IconButton disableRipple onClick={() => setFilterToggle(true)}>
@@ -85,8 +112,41 @@ const Home = () => {
           close={() => setFilterToggle(false)}
           filterTopic={filterTopic}
           setFilterTopic={setFilterTopic}
+          filterAuthor={filterAuthor}
+          setFilterAuthor={setFilterAuthor}
+          sortState={sortState}
+          setSortState={setSortState}
         />
       </Stack>
+      <Tabs
+        value={tab}
+        onChange={(e, newVal) => {
+          setTab(newVal);
+        }}
+        textColor="primary"
+        indicatorColor="primary"
+        sx={{ maxWidth: "fit-content", margin: "auto" }}
+        variant="scrollable"
+      >
+        <Tab
+          label="All Blogs"
+          value={0}
+          disableRipple
+          size={sm ? "small" : "medium"}
+        />
+        <Tab
+          label="Top Blogs"
+          value={1}
+          disableRipple
+          size={sm ? "small" : "medium"}
+        />
+        <Tab
+          label="Recommended"
+          value={2}
+          disableRipple
+          size={sm ? "small" : "medium"}
+        />
+      </Tabs>
       {blogs.loading || blogs.error ? (
         <ErrorBox
           message={blogs.loading ? "Loading..." : "Couldn't load blogs"}
@@ -101,7 +161,25 @@ const Home = () => {
           }}
         >
           {blogs
+            .filter((blog) => blog.title.toLowerCase().includes(search))
             .filter((blog) => topicResults.includes(blog.topics[0].name))
+            .filter((blog) => filterAuthor[blog.user_details.name])
+            .sort((a, b) => {
+              if (sortState == 0) return 1;
+              return (
+                (sortState < 3
+                  ? a.views_count < b.views_count
+                    ? 1
+                    : -1
+                  : sortState < 5
+                  ? a.likes_count < b.likes_count
+                    ? 1
+                    : -1
+                  : a.comments_count < b.comments_count
+                  ? 1
+                  : -1) * (sortState % 2 ? 1 : -1)
+              );
+            })
             .map((blog, i) => {
               return <BlogCard key={i} data={blog} />;
             })}
