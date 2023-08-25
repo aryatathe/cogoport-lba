@@ -52,6 +52,7 @@ const BlogCardPaper = styled(Paper)(({ theme }) => ({
 }));
 
 const BlogCard = ({ data }) => {
+  console.log(data);
   return (
     <Link to={`/blog/${data.id}`}>
       <BlogCardPaper
@@ -76,31 +77,34 @@ const BlogCard = ({ data }) => {
             </Typography>
           </Stack>
           <Stack direction="column" alignSelf="flex-end" alignItems="flex-end">
-            <Typography
-              variant="subtitle2"
-              align="center"
-              color="secondary"
-              sx={{ transform: "translateY(5px)" }}
-            >
-              {data.topics[0].name}
-            </Typography>
             <Typography variant="subtitle2" align="center" color="primary">
-              {data.created_at.slice(2, 10).replaceAll("-", "/")}
+              {data.created_at.slice(2, 10).split("-").reverse().join("/")}
+            </Typography>
+            <Typography variant="subtitle2" align="center" color="secondary">
+              {data.topics[0].name}
             </Typography>
           </Stack>
           <Stack direction="row" alignItems="center" alignSelf="flex-end">
-            <CommentIcon fontSize="small" color="primary" />
-            <Typography variant="subtitle2" color="primary">
-              {data.comments_count}
-            </Typography>
-            <FavoriteIcon fontSize="small" color="primary" />
-            <Typography variant="subtitle2" color="primary">
-              {data.likes_count}
-            </Typography>
-            <VisibilityIcon fontSize="small" color="primary" />
-            <Typography variant="subtitle2" color="primary">
-              {data.views_count}
-            </Typography>
+            {data.published ? (
+              <>
+                <CommentIcon fontSize="small" color="primary" />
+                <Typography variant="subtitle2" color="primary">
+                  {data.comments_count}
+                </Typography>
+                <FavoriteIcon fontSize="small" color="primary" />
+                <Typography variant="subtitle2" color="primary">
+                  {data.likes_count}
+                </Typography>
+                <VisibilityIcon fontSize="small" color="primary" />
+                <Typography variant="subtitle2" color="primary">
+                  {data.views_count}
+                </Typography>
+              </>
+            ) : (
+              <Typography variant="subtitle2" color="secondary">
+                <i>Draft</i>
+              </Typography>
+            )}
           </Stack>
         </Stack>
       </BlogCardPaper>

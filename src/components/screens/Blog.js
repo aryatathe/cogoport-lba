@@ -266,7 +266,11 @@ const Blog = () => {
                 </Typography>
                 <Stack direction="row" spacing={2}>
                   <Typography variant="body2">
-                    {blog.created_at.slice(2, 10).replaceAll("-", "/")}
+                    {blog.created_at
+                      .slice(2, 10)
+                      .split("-")
+                      .reverse()
+                      .join("/")}
                   </Typography>
 
                   {sm ? (
@@ -404,7 +408,11 @@ const Blog = () => {
                         {comment.user_details.name}
                       </Typography>
                       <Typography variant="body2" color="secondary">
-                        {comment.created_at.slice(2, 10).replaceAll("-", "/")}
+                        {comment.created_at
+                          .slice(2, 10)
+                          .split("-")
+                          .reverse()
+                          .join("/")}
                       </Typography>
                     </Stack>
                   </Stack>

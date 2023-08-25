@@ -167,6 +167,31 @@ const theme = createTheme({
         },
       },
     },
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+          "& fieldset": {
+            borderColor: "#ffc9b599",
+          },
+          "&:hover fieldset": {
+            borderColor: "#ffc9b5 !important",
+          },
+        },
+        select: {
+          color: "#e3fcef",
+        },
+        icon: {
+          color: "#ffc9b5",
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          color: "#ffc9b599",
+        },
+      },
+    },
     MuiDrawer: {
       styleOverrides: {
         paper: {

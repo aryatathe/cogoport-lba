@@ -92,7 +92,9 @@ const Profile = () => {
 
   const fetchBlogs = () => {
     fetch(
-      `${process.env.REACT_APP_API_URL}/view-posts?token=${token}&author_id=${id}`,
+      `${process.env.REACT_APP_API_URL}/view-${
+        id == myId ? "my-" : ""
+      }posts?token=${token}&author_id=${id}`,
       {
         method: "get",
       }
@@ -285,9 +287,14 @@ const Profile = () => {
                   ) : blogs.error ? (
                     <div>error</div>
                   ) : (
-                    (tab == 0
-                      ? blogs
-                      : bookmarks.map((x) => x.post_details)
+                    (tab == 1
+                      ? bookmarks.map((x) => ({
+                          ...x.post_details,
+                          published: true,
+                        }))
+                      : blogs.filter((blog) =>
+                          blog.published ? tab == 0 : tab == 2
+                        )
                     ).map((blog, i) => {
                       return <BlogCard key={i} data={blog} />;
                     })

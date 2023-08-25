@@ -3,12 +3,16 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import Stack from "@mui/material/Stack";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import IconButton from "@mui/material/IconButton";
-import Box from "@mui/material/Box";
-import Autocomplete from "@mui/material/Autocomplete";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
 
 import { styled } from "@mui/material/styles";
 
@@ -35,12 +39,6 @@ const convertBase64 = (file) => {
   });
 };
 
-const Editor = styled(Stack)({
-  maxWidth: "800px",
-  margin: "30px auto",
-  padding: "0 20px",
-});
-
 const ImageBox = styled(Box)({
   position: "relative",
   borderRadius: "5px",
@@ -61,14 +59,25 @@ const ImageBox = styled(Box)({
   },
 });
 
+const VersionCard = styled(Stack)({
+  background: "#433e3f",
+  borderRadius: "10px",
+  padding: "10px",
+  margin: "10px",
+  transition: "all 0.2s ease",
+  cursor: "pointer",
+  "&:hover": { transform: "scale(1.03)" },
+});
+
 const EditBlog = () => {
   const [blog, setBlog] = useState({ loading: true });
   const [img, setImg] = useState(tempImage);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [topic, setTopic] = useState(topics[0]);
+  const [topic, setTopic] = useState("");
+  const [versions, setVersions] = useState([]);
 
-  console.log(img);
+  console.log(versions);
 
   const token = useSelector((state) => state.token);
   const myId = useSelector((state) => state.id);
@@ -77,7 +86,7 @@ const EditBlog = () => {
   const id = useParams().id;
   const navigate = useNavigate();
 
-  const uploadBlog = () => {
+  const uploadBlog = (isDraft) => {
     fetch(
       `${process.env.REACT_APP_API_URL}/${
         id == "new" ? "create" : "update"
@@ -95,8 +104,26 @@ const EditBlog = () => {
           featured_image: img,
           content: content,
           topics: [topic],
-          publish_status: true,
+          publish_status: !isDraft,
         }),
+      }
+    )
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          console.log(result);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  };
+
+  const deleteBlog = () => {
+    fetch(
+      `${process.env.REACT_APP_API_URL}/delete-post?token=${token}&post_id=${id}`,
+      {
+        method: "delete",
       }
     )
       .then((res) => res.json())
@@ -136,6 +163,30 @@ const EditBlog = () => {
   }, []);
 
   useEffect(() => {
+    if (id == "new") {
+      setVersions([]);
+      return;
+    }
+    setVersions([]);
+    fetch(
+      `${process.env.REACT_APP_API_URL}/get-all-versions-of-post?token=${token}&post_id=${id}`,
+      {
+        method: "get",
+      }
+    )
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          console.log(result);
+          setVersions(result.versions);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  }, []);
+
+  useEffect(() => {
     if (blog.loading || blog.error || id == "new") return;
     if (blog.user_details.id != myId)
       navigate(`/profile/${myId}`, { replace: true });
@@ -152,7 +203,16 @@ const EditBlog = () => {
           message={blogs.loading ? "Loading..." : "Couldn't load blog"}
         />
       ) : (
-        <Editor direction="column" alignItems="stretch" spacing={2}>
+        <Stack
+          direction="column"
+          alignItems="stretch"
+          spacing={2}
+          sx={{
+            maxWidth: "800px",
+            margin: "30px auto",
+            padding: "0 20px",
+          }}
+        >
           <Typography variant="h2" align="center" color="primary">
             {id == "new" ? "Create" : "Edit"} Blog
           </Typography>
@@ -183,19 +243,21 @@ const EditBlog = () => {
           />
           <TextField
             value={content}
-            label="Write Post"
+            label="Content"
             variant="outlined"
             multiline
             minRows={3}
             onChange={(e) => setContent(e.target.value)}
           />
           <Stack
-            fullWidth
             direction="row"
-            justifyContent="space-between"
+            justifyContent="center"
+            flexWrap="wrap"
             spacing={2}
+            rowGap={2}
+            sx={{ marginBottom: "30px !important" }}
           >
-            <Autocomplete
+            {/*<Autocomplete
               value={topic}
               disablePortal
               options={topics}
@@ -211,12 +273,107 @@ const EditBlog = () => {
               onChange={(event, newValue) => {
                 setTopic(newValue);
               }}
-            />
-            <Button variant="contained" color="secondary" onClick={uploadBlog}>
-              {id == "new" ? "Post" : "Update"}
-            </Button>
+            />*/}
+            <FormControl sx={{ flexGrow: 1, minWidth: "300px" }}>
+              <InputLabel>Topic</InputLabel>
+              <Select
+                variant="outlined"
+                value={topic}
+                label="Topic"
+                onChange={(e) => {
+                  setTopic(e.target.value);
+                }}
+              >
+                {topics.map((topic, i) => (
+                  <MenuItem key={i} value={topic}>
+                    {topic}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <Stack direction="row" justifyContent="center" spacing={1}>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => uploadBlog(true)}
+              >
+                Draft
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => uploadBlog(false)}
+              >
+                Publish
+              </Button>
+              {id != "new" && (
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={deleteBlog}
+                  disabled
+                >
+                  Delete
+                </Button>
+              )}
+            </Stack>
           </Stack>
-        </Editor>
+          {id != "new" && versions != [] && (
+            <>
+              <Typography variant="h3" align="center" color="primary">
+                Load Previous Version
+              </Typography>
+              <Grid
+                container
+                direction="row-reverse"
+                alignItems="stretch"
+                justifyContent="center"
+                sx={{ maxWidth: "100%" }}
+              >
+                {versions.map((version, i) => {
+                  var localTime = new Date(version.updated_at);
+                  localTime = new Date(
+                    localTime.getTime() + localTime.getTimezoneOffset() * 60000
+                  ).toISOString();
+                  console.log(localTime);
+                  return (
+                    <Grid item xs={4} sm={3}>
+                      <VersionCard
+                        direction="column"
+                        alignItems="center"
+                        component={Paper}
+                        elevation={6}
+                        onClick={() => {
+                          setTitle(version.title);
+                          setContent(version.content);
+                          setImg(version.featured_image);
+                        }}
+                      >
+                        <Typography variant="h3" color="secondary">
+                          v{version.version}
+                        </Typography>
+                        <Typography variant="body1" color="primary">
+                          {localTime
+                            .slice(2, 10)
+                            .split("-")
+                            .reverse()
+                            .join("/")}
+                        </Typography>
+                        <Typography variant="body1" color="primary">
+                          {localTime
+                            .slice(11, 16)
+                            .split("-")
+                            .reverse()
+                            .join("/")}
+                        </Typography>
+                      </VersionCard>
+                    </Grid>
+                  );
+                })}
+              </Grid>
+            </>
+          )}
+        </Stack>
       )}
     </>
   );
