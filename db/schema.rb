@@ -181,6 +181,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_13_081542) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "num_of_posts_left", default: 5
+    t.string "pfp"
     t.index ["email"], name: "unique_emails", unique: true
     t.index ["token"], name: "index_users_on_token", unique: true
   end

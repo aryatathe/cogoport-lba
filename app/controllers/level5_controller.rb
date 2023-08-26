@@ -348,7 +348,17 @@ class Level5Controller < ApplicationController
         end
 
         lists = user.lists
-        render json: {lists: lists, status: 200}
+        contains=[]
+
+        for list in lists
+            for obj in list.postidsforlists
+                if obj.PostID==params[:post_id]
+                    contains << obj.list_id
+                end
+            end
+        end
+
+        render json: {lists: lists, contains: contains, status: 200}
     end
 
     def GetList

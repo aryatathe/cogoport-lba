@@ -7,6 +7,7 @@ class CreateUser < ActiveRecord::Migration[7.0]
       t.string :password
       t.text :about
       t.string :profile_pic
+      t.string :pfp
       t.integer :followers_count
       t.integer :following_count
       t.boolean :is_author

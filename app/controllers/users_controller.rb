@@ -70,7 +70,7 @@ class UsersController < ApplicationController
 
         username = params[:username]
         is_author = params[:is_author]
-        profile_pic = params[:profile_pic]
+        pfp = params[:pfp]
         name = params[:name]
         about = params[:about]
 
@@ -78,11 +78,11 @@ class UsersController < ApplicationController
             user.username = username
         end
 
-        if username
+        if name
             user.name = name
         end
 
-        if username
+        if about
             user.about = about
         end
 
@@ -94,8 +94,8 @@ class UsersController < ApplicationController
             end
         end
 
-        if profile_pic
-            user.profile_pic.attach(params[:profile_pic])
+        if pfp
+            user.pfp=params[:pfp]
         end
 
         user.save

@@ -136,6 +136,9 @@ class LikeCommentFollowController < ApplicationController
             end
         end
 
+        post.comments_count = post.comments_count+1;
+        post.save
+
         render json: {msg: "Added the comment!", status: 200}
         return
     end
@@ -183,6 +186,9 @@ class LikeCommentFollowController < ApplicationController
                 obj.save
             end
         end
+
+        post.comments_count = post.comments_count-1;
+        post.save
 
         render json: {msg: "Deleted the comment!", status: 200}
         return

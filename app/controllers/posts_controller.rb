@@ -94,6 +94,7 @@ class PostsController < ApplicationController
 
         for topicName in topics
             existingTopicObj = Topic.find_by(name: topicName)
+            post.topics=post.topics.clear
             if existingTopicObj
                 found = post.topics.find {|topicObj| topicObj.name == topicName}
                 if !found
@@ -165,8 +166,10 @@ class PostsController < ApplicationController
                 return
             end
 
-            user.num_of_posts_left = user.num_of_posts_left - 1
-            user.save
+            if !params[:skip]
+                user.num_of_posts_left = user.num_of_posts_left - 1
+                user.save
+            end
             post.views_count = post.views_count+1
             post.save
             #Algorithm to calculate popularity of particular post to be in top posts
@@ -184,7 +187,10 @@ class PostsController < ApplicationController
 
         ser_post[:readingMinutes] = readingMinutes
 
-        render json: {post: ser_post, msg: "You have #{user.num_of_posts_left} Posts left!", postsLeft: user.num_of_posts_left, status: 200}
+        savelaters = user.savelaters
+        ser_bookmark = ActiveModelSerializers::SerializableResource.new(savelaters, each_serializer: SavelaterSerializer).as_json
+
+        render json: {post: ser_post, msg: "You have #{user.num_of_posts_left} Posts left!", bookmarks: ser_bookmark, postsLeft: user.num_of_posts_left, status: 200}
         return
     end
 
@@ -230,6 +236,7 @@ class PostsController < ApplicationController
         end
 
         author = params[:author]
+        author_id = params[:author_id]
         start_date = params[:start_date]
         end_date = params[:end_date]
         sort_by_likes = params[:sort_by_likes]
@@ -243,6 +250,10 @@ class PostsController < ApplicationController
 
         if start_date && end_date
             posts = posts.where(created_at: params[:start_date]..params[:end_date])
+        end
+
+        if author_id
+            posts = posts.where(user_id: author_id)
         end
 
         if sort_by_comments
