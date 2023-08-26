@@ -64,7 +64,7 @@ Issues:
 
 - no way to delete user, delete list, etc.
 - deleting a blog doesn't remove it from other users bookmarks, lists, and similar issues which crash server
-- payment works as pay-per-view basis, user starts with 5 blogs and
+- payment works as pay-per-view basis, user starts with 5 blogs and pays fixed amount per view
 
 ## Incomplete Story Points
 
