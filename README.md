@@ -1,70 +1,73 @@
-# Getting Started with Create React App
+# Blogs App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Language Based Assessment (Cogoport)
 
-## Available Scripts
+## Features (by routemap)
 
-In the project directory, you can run:
+- `/`
 
-### `npm start`
+  - show all blogs / top blogs / recommended blogs
+  - search blogs
+  - filter by one or more authors, one or more topics
+  - search for topics and authors in the filter tab
+  - sort by views, likes, or comments (all ascending or descending)
+  - (search, sort, and filter simultaneously)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- `/login`
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+  - login / signup, fetches basic user details and saves auth token to redux state
+  - all urls redirect here if logged out
 
-### `npm test`
+- `/profile`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+  - `/:id`
+    - show user details, followers, following users, and published blogs
+    - for logged in user:
+      - show edit profile button, logout button
+      - show bookmarks, drafts
+      - show remaining blog views, payment option
+    - for other users:
+      - show follow button
+  - `/edit`
+    - update photo, name, about, and change password
 
-### `npm run build`
+- `/blog/:id`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+  - show blog + details, comments
+  - for own blogs:
+    - show edit button
+  - for other user's blogs:
+    - show like button, bookmark button, add to lists button
+    - add to lists popup to add / remove from multiple lists
+    - show add comment option
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- `/editor`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+  - edit / create blogs, input fields for image, title, content, topic
+  - publish or save as draft
+  - `/new`
+    - creates new blog
+  - `/:id`
+    - updates blog with given id, redirects if not own blog
+    - show delete button
+    - show versions history
+    - load content from a previous version
 
-### `npm run eject`
+- `/lists`
+  - view / create lists
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Backend on branch `backend`
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Used code from [this repo](https://github.com/rudrakshsattabhayya/BlogPost-Assignment-Backend) with several minor bug fixes (except those I couldn't figure out how to resolve)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Issues:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- no way to delete user, delete list, etc.
+- deleting a blog doesn't remove it from other users bookmarks, lists, and similar issues which crash server
+- payment works as pay-per-view basis, user starts with 5 blogs and
 
-## Learn More
+## Incomplete Story Points
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- payment (api returns an order id, can't find out how to integrate razorpay with that)
+- delete lists, delete users, share lists (bugged or no backend support)
+- reading time (backend has an api to blog reading time, can't figure out when / how to use that)
