@@ -4,27 +4,23 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
 
+import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
+import Grid from "@mui/material/Grid";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
 
 import { styled, useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 
-import Header from "../Header";
 import BlogCard from "../BlogCard";
 import ErrorBox from "../ErrorBox";
-
-//import blogs from "../../content/blogs";
-import users from "../../content/users";
 
 const UserInfo = styled(Stack)({
   padding: "40px 20px",
@@ -55,27 +51,13 @@ const UserListItem = styled(Stack)(({ theme }) => ({
   },
 }));
 
-function loadScript(src) {
-  return new Promise((resolve) => {
-    const script = document.createElement("script");
-    script.src = src;
-    script.onload = () => {
-      resolve(true);
-    };
-    script.onerror = () => {
-      resolve(false);
-    };
-    document.body.appendChild(script);
-  });
-}
-
 const Profile = () => {
+  const [tab, setTab] = useState(0);
   const [user, setUser] = useState({ loading: true });
   const [blogs, setBlogs] = useState({ loading: true });
   const [bookmarks, setBookmarks] = useState({ loading: true });
   const [isFollowed, setIsFollowed] = useState(false);
-  const [tab, setTab] = useState(0);
-  const [payment, setPayment] = useState(0);
+  const [payment, setPayment] = useState();
 
   const token = useSelector((state) => state.token);
   const myId = useSelector((state) => state.id);
@@ -83,10 +65,10 @@ const Profile = () => {
 
   const id = useParams().id;
 
+  const navigate = useNavigate();
+
   const theme = useTheme();
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
-
-  const navigate = useNavigate();
 
   const fetchUser = () => {
     fetch(
@@ -101,6 +83,7 @@ const Profile = () => {
           console.log(result);
           if (result.status == 200) {
             setUser(result.profile);
+            if (result.profile.id == myId) return;
             let flag = false;
             result.profile.Followers.forEach((x) => {
               if (x.id == myId) flag = true;
@@ -189,28 +172,18 @@ const Profile = () => {
     setTab(0);
     setUser({ loading: true });
     setBlogs({ loading: true });
-    setBookmarks({ loading: true });
     fetchUser();
     fetchBlogs();
+    if (id != myId) return;
+    setBookmarks({ loading: true });
     fetchBookmarks();
   }, [id]);
-
-  async function displayRazorpay() {
-    const res = await loadScript(
-      "https://checkout.razorpay.com/v1/checkout.js"
-    );
-
-    if (!res) {
-      alert("Razorpay SDK failed to load...");
-      return;
-    }
-  }
 
   return user.loading || user.error ? (
     <ErrorBox message={user.loading ? "Loading..." : "Couldn't load user"} />
   ) : (
     <Grid container>
-      <Grid item xs={12} md={4} lg={3} xl={2}>
+      <Grid item xs={12} sm={4} md={4} lg={3} xl={2}>
         <UserInfo direction="column" alignItems="center" spacing={2}>
           <Box id="pfp">
             <img src={user.pfp} />
@@ -268,7 +241,7 @@ const Profile = () => {
                   type="number"
                   onChange={(e) => setPayment(e.target.value)}
                 />
-                <IconButton disableRipple onClick={displayRazorpay}>
+                <IconButton disableRipple>
                   <AddOutlinedIcon color="secondary" fontSize="large" />
                 </IconButton>
               </Stack>
@@ -276,7 +249,7 @@ const Profile = () => {
           )}
         </UserInfo>
       </Grid>
-      <Grid item xs={12} md={8} lg={9} xl={10}>
+      <Grid item xs={12} sm={8} md={8} lg={9} xl={10}>
         <Tabs
           value={tab}
           onChange={(e, newVal) => {
@@ -352,8 +325,14 @@ const Profile = () => {
                     published: true,
                   }))
                 : blogs.filter((blog) => (blog.published ? tab == 0 : tab == 2))
-              ).map((blog, i) => {
-                return <BlogCard key={i} data={blog} />;
+              ).map((blog) => {
+                return (
+                  <BlogCard
+                    key={blog.title}
+                    data={blog}
+                    breakpointSwitch={true}
+                  />
+                );
               })
             )}
           </Stack>
@@ -372,8 +351,8 @@ const Profile = () => {
               },
             }}
           >
-            {(tab == 3 ? user.Followers : user.Following).map((f, i) => (
-              <Link to={`/profile/${f.id}`}>
+            {(tab == 3 ? user.Followers : user.Following).map((f) => (
+              <Link key={f.id} to={`/profile/${f.id}`}>
                 <UserListItem
                   key={f.name}
                   direction="column"

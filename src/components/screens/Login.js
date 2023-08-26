@@ -1,23 +1,22 @@
 import { useState, useEffect } from "react";
+
 import { useDispatch, useSelector } from "react-redux";
 
 import { useNavigate } from "react-router";
 
 import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-
-import Header from "../Header";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
 
 const Login = () => {
   const [tab, setTab] = useState(false);
-  const [message, setMessage] = useState("");
   const [email, setEmail] = useState("xyz@gmail.com");
   const [password, setPassword] = useState("password");
   const [password2, setPassword2] = useState("password");
+  const [message, setMessage] = useState("");
 
   const token = useSelector((state) => state.token);
   const myId = useSelector((state) => state.id);
@@ -26,7 +25,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (token != "") navigate(`/profile/${myId}`, { replace: true });
+    if (token != "") navigate(`/profile/${myId}`);
   }, [myId]);
 
   const handleLogin = () => {
@@ -123,6 +122,7 @@ const Login = () => {
         />
         <TextField
           label="Password"
+          type="password"
           variant="standard"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -130,6 +130,7 @@ const Login = () => {
         {tab && (
           <TextField
             label="Confirm Password"
+            type="password"
             variant="standard"
             value={password2}
             onChange={(e) => setPassword2(e.target.value)}

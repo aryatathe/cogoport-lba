@@ -1,22 +1,21 @@
 import { useState, useEffect } from "react";
+
 import { useSelector } from "react-redux";
 
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import InputAdornment from "@mui/material/InputAdornment";
-import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
+import TextField from "@mui/material/TextField";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
 
-import { styled, useTheme } from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 import SearchIcon from "@mui/icons-material/Search";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 
-import Header from "../Header";
 import BlogCard from "../BlogCard";
 import FilterArea from "../FilterArea";
 import ErrorBox from "../ErrorBox";
@@ -36,7 +35,6 @@ const Home = () => {
 
   const theme = useTheme();
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
-  const md = useMediaQuery(theme.breakpoints.down("md"));
 
   const topicResults = topics.filter((topic, i) => filterTopic[i]);
 
@@ -180,8 +178,8 @@ const Home = () => {
                   : -1) * (sortState % 2 ? 1 : -1)
               );
             })
-            .map((blog, i) => {
-              return <BlogCard key={i} data={blog} />;
+            .map((blog) => {
+              return <BlogCard key={blog.title} data={blog} />;
             })}
         </Stack>
       )}

@@ -1,37 +1,25 @@
 import { useState, useEffect } from "react";
+
 import { useSelector } from "react-redux";
 
+import Stack from "@mui/material/Stack";
 import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import Stack from "@mui/material/Stack";
 
-import { styled, useTheme } from "@mui/material/styles";
-import useMediaQuery from "@mui/material/useMediaQuery";
-
-import SearchIcon from "@mui/icons-material/Search";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-import Header from "../Header";
 import BlogCard from "../BlogCard";
-import FilterArea from "../FilterArea";
 import ErrorBox from "../ErrorBox";
 
-import topics from "../../content/topics";
-
 const Lists = () => {
-  const [filterToggle, setFilterToggle] = useState(false);
+  const [listTab, setListTab] = useState(-1);
   const [lists, setLists] = useState({ loading: true });
   const [listView, setListView] = useState([]);
-  const [listTab, setListTab] = useState(-1);
   const [create, setCreate] = useState("");
-
-  console.log(listView);
 
   const token = useSelector((state) => state.token);
 
@@ -138,17 +126,18 @@ const Lists = () => {
       spacing={2}
       sx={{ maxWidth: "100%", padding: "20px 0 40px 20px" }}
     >
-      <Grid item>
+      <Grid item xs={12} sm={5} md={3}>
         {lists.map((list, i) => (
           <Button
+            key={list.name}
             fullWidth
-            key={i}
             variant={listTab == i ? "contained" : "text"}
             color={listTab == i ? "secondary" : "primary"}
             spacing={1}
             sx={{
               justifyContent: "space-between",
               pointerEvents: listTab == i ? "none" : "all",
+              padding: "6px !important",
             }}
             onClick={() => {
               setListTab(i);
@@ -190,7 +179,7 @@ const Lists = () => {
           </IconButton>
         </Stack>
       </Grid>
-      <Grid item xs>
+      <Grid item xs={12} sm={7} md={9}>
         {listView.loading || listView.error ? (
           <ErrorBox
             message={listView.loading ? "Loading..." : "Couldn't load blogs"}
@@ -202,16 +191,15 @@ const Lists = () => {
         ) : listView.length == 0 ? (
           <ErrorBox message="No blogs found!" />
         ) : (
-          <Stack
-            direction="column"
-            alignItems="stretch"
-            spacing={2}
-            sx={{
-              padding: "0 20px",
-            }}
-          >
-            {listView.map((blog, i) => {
-              return <BlogCard key={i} data={blog.postDetails} />;
+          <Stack direction="column" alignItems="stretch" spacing={2}>
+            {listView.map((blog) => {
+              return (
+                <BlogCard
+                  key={blog.postDetails.title}
+                  data={blog.postDetails}
+                  breakpointSwitch={true}
+                />
+              );
             })}
           </Stack>
         )}

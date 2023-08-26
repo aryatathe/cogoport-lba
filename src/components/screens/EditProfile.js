@@ -1,19 +1,18 @@
 import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+
+import { useSelector } from "react-redux";
 
 import { useNavigate } from "react-router";
 
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
 
 import { styled } from "@mui/material/styles";
-
-import Header from "../Header";
 
 import tempImage from "../../images/pfp.png";
 
@@ -37,6 +36,7 @@ const ImageBox = styled(Box)({
   maxWidth: "300px",
   position: "relative",
   borderRadius: "50%",
+  margin: "0 20px !important",
   overflow: "hidden",
   aspectRatio: "1/1",
   "& .MuiStack-root": {
@@ -76,7 +76,6 @@ const LoginInput = styled(TextField)({
 
 const EditProfile = () => {
   const [tab, setTab] = useState(0);
-  const [message, setMessage] = useState("");
   const [data, setData] = useState({
     name: "",
     about: "",
@@ -84,6 +83,7 @@ const EditProfile = () => {
   });
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [message, setMessage] = useState("");
 
   const token = useSelector((state) => state.token);
   const myId = useSelector((state) => state.id);
@@ -218,15 +218,17 @@ const EditProfile = () => {
         ) : (
           <>
             <LoginInput
+              label="New Password"
+              type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              label="New Password"
               variant="standard"
             />
             <LoginInput
+              label="Confirm Password"
+              type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              label="Confirm Password"
               variant="standard"
             />
           </>

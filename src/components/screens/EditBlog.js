@@ -1,25 +1,25 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 
+import { useParams, useNavigate } from "react-router-dom";
+
+import { useSelector } from "react-redux";
+
+import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
+import TextField from "@mui/material/TextField";
 import Select from "@mui/material/Select";
+import InputLabel from "@mui/material/InputLabel";
+import Button from "@mui/material/Button";
+import MenuItem from "@mui/material/MenuItem";
 
 import { styled } from "@mui/material/styles";
 
-import Header from "../Header";
 import ErrorBox from "../ErrorBox";
 
-import blogs from "../../content/blogs";
 import topics from "../../content/topics";
 
 import tempImage from "../../images/blog-temp.jpg";
@@ -59,7 +59,7 @@ const ImageBox = styled(Box)({
   },
 });
 
-const VersionCard = styled(Stack)({
+const VersionCard = styled(Stack)(({ theme }) => ({
   background: "#433e3f",
   borderRadius: "10px",
   padding: "10px",
@@ -67,7 +67,10 @@ const VersionCard = styled(Stack)({
   transition: "all 0.2s ease",
   cursor: "pointer",
   "&:hover": { transform: "scale(1.03)" },
-});
+  [theme.breakpoints.down("sm")]: {
+    margin: "5px",
+  },
+}));
 
 const EditBlog = () => {
   const [blog, setBlog] = useState({ loading: true });
@@ -79,9 +82,9 @@ const EditBlog = () => {
 
   const token = useSelector((state) => state.token);
   const myId = useSelector((state) => state.id);
-  const dispatch = useDispatch();
 
   const id = useParams().id;
+
   const navigate = useNavigate();
 
   const uploadBlog = (isDraft) => {
@@ -195,7 +198,7 @@ const EditBlog = () => {
   }, [blog]);
 
   return blog.loading || blog.error ? (
-    <ErrorBox message={blogs.loading ? "Loading..." : "Couldn't load blog"} />
+    <ErrorBox message={blog.loading ? "Loading..." : "Couldn't load blog"} />
   ) : (
     <Stack
       direction="column"
@@ -204,7 +207,7 @@ const EditBlog = () => {
       sx={{
         maxWidth: "800px",
         margin: "30px auto",
-        padding: "0 20px",
+        padding: { xs: "0 10px", sm: "0 20px" },
       }}
     >
       <Typography variant="h2" align="center" color="primary">
@@ -244,31 +247,12 @@ const EditBlog = () => {
         onChange={(e) => setContent(e.target.value)}
       />
       <Stack
-        direction="row"
+        direction={{ xs: "column", sm: "row" }}
         justifyContent="center"
-        flexWrap="wrap"
         spacing={2}
-        rowGap={2}
         sx={{ marginBottom: "30px !important" }}
       >
-        {/*<Autocomplete
-              value={topic}
-              disablePortal
-              options={topics}
-              getOptionLabel={(option) =>
-                typeof option === "string" || option instanceof String
-                  ? option
-                  : ""
-              }
-              renderInput={(params) => (
-                <TextField {...params} fullWidth label="Topic" />
-              )}
-              sx={{ flex: 1 }}
-              onChange={(event, newValue) => {
-                setTopic(newValue);
-              }}
-            />*/}
-        <FormControl sx={{ flexGrow: 1, minWidth: "300px" }}>
+        <FormControl sx={{ flexGrow: 1, minWidth: "200px" }}>
           <InputLabel>Topic</InputLabel>
           <Select
             variant="outlined"
@@ -278,8 +262,8 @@ const EditBlog = () => {
               setTopic(e.target.value);
             }}
           >
-            {topics.map((topic, i) => (
-              <MenuItem key={i} value={topic}>
+            {topics.map((topic) => (
+              <MenuItem key={topic} value={topic}>
                 {topic}
               </MenuItem>
             ))}
@@ -301,12 +285,7 @@ const EditBlog = () => {
             Publish
           </Button>
           {id != "new" && (
-            <Button
-              variant="contained"
-              color="error"
-              onClick={deleteBlog}
-              disabled
-            >
+            <Button variant="contained" color="error" onClick={deleteBlog}>
               Delete
             </Button>
           )}
@@ -319,19 +298,19 @@ const EditBlog = () => {
           </Typography>
           <Grid
             container
-            direction="row-reverse"
+            direction="row"
             alignItems="stretch"
             justifyContent="center"
             sx={{ maxWidth: "100%" }}
           >
-            {versions.map((version, i) => {
+            {versions.reverse().map((version) => {
               var localTime = new Date(version.updated_at);
               localTime = new Date(
                 localTime.getTime() + localTime.getTimezoneOffset() * 60000
               ).toISOString();
               console.log(localTime);
               return (
-                <Grid item xs={4} sm={3}>
+                <Grid key={version} item xs={6} sm={3}>
                   <VersionCard
                     direction="column"
                     alignItems="center"

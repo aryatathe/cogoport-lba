@@ -1,24 +1,20 @@
 import { useState } from "react";
 
 import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import Autocomplete from "@mui/material/Autocomplete";
-import TextField from "@mui/material/TextField";
 import Drawer from "@mui/material/Drawer";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
 import Checkbox from "@mui/material/Checkbox";
+import Button from "@mui/material/Button";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
-import { styled } from "@mui/material/styles";
-
 import topics from "../content/topics";
-import users from "../content/users";
 
 const FilterArea = ({
   visible,
@@ -41,6 +37,7 @@ const FilterArea = ({
 
   const topicCheckAll = topics.map(() => true);
   const topicCheckNone = topics.map(() => false);
+
   const authorCheckAll = () => {
     let ans = true;
     Object.keys(filterAuthor).forEach((author) => {
@@ -188,6 +185,7 @@ const FilterArea = ({
         </Typography>
         {["Views", "Likes", "Comments"].map((sortType, i) => (
           <Stack
+            key={sortType}
             direction="row"
             justifyContent="space-between"
             alignItems="center"

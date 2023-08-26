@@ -22,7 +22,6 @@ const reducer = (state = initialState, action) => {
       return newState;
     }
     case "LOGOUT": {
-      console.log(action.payload);
       localStorage.setItem("user", JSON.stringify(blankState));
       return blankState;
     }

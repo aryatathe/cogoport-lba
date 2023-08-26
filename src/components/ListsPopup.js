@@ -1,26 +1,18 @@
 import { useState, useEffect } from "react";
+
 import { useSelector } from "react-redux";
 
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Dialog from "@mui/material/Dialog";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import Stack from "@mui/material/Stack";
-import Dialog from "@mui/material/Dialog";
 
-import { styled, useTheme } from "@mui/material/styles";
-import useMediaQuery from "@mui/material/useMediaQuery";
-
-import SearchIcon from "@mui/icons-material/Search";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 
-const ListsPopup = ({ isOpen, close, id, type }) => {
-  const [filterToggle, setFilterToggle] = useState(false);
+const ListsPopup = ({ isOpen, close, id }) => {
   const [lists, setLists] = useState({ loading: true });
-  const [listTab, setListTab] = useState(-1);
   const [create, setCreate] = useState("");
 
   const token = useSelector((state) => state.token);
@@ -40,7 +32,7 @@ const ListsPopup = ({ isOpen, close, id, type }) => {
           console.log(result);
           if (result.status == 200) {
             let contains = result.contains;
-            let listsData = result.lists.map((l, i) => ({
+            let listsData = result.lists.map((l) => ({
               ...l,
               contains: contains.includes(l.id),
             }));
@@ -104,10 +96,10 @@ const ListsPopup = ({ isOpen, close, id, type }) => {
           >
             Add to Lists
           </Typography>
-          {lists.map((list, i) => (
+          {lists.map((list) => (
             <Button
+              key={list.name}
               fullWidth
-              key={i}
               variant={list.contains ? "contained" : "text"}
               color={list.contains ? "secondary" : "primary"}
               onClick={() =>

@@ -1,16 +1,15 @@
 import { Link } from "react-router-dom";
 
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
+
+import { styled } from "@mui/material/styles";
 
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import CommentIcon from "@mui/icons-material/Comment";
-
-import { styled } from "@mui/material/styles";
 
 import tempImage from "../images/blog-temp.jpg";
 
@@ -51,13 +50,17 @@ const BlogCardPaper = styled(Paper)(({ theme }) => ({
   },
 }));
 
-const BlogCard = ({ data }) => {
+const BlogCard = ({ data, breakpointSwitch = false }) => {
   return (
     <Link to={`/blog/${data.id}`}>
       <BlogCardPaper
         elevation={6}
         component={Stack}
-        direction={{ xs: "column", sm: "row" }}
+        direction={{
+          xs: "column",
+          sm: breakpointSwitch ? "column" : "row",
+          md: "row",
+        }}
         alignItems="stretch"
         spacing={{ xs: 1, sm: 2 }}
       >

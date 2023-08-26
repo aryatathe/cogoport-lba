@@ -1,17 +1,18 @@
 import { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 
+import { Link, useParams } from "react-router-dom";
+
+import { useSelector } from "react-redux";
+
+import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
 
-import { styled, useTheme } from "@mui/material/styles";
-import useMediaQuery from "@mui/material/useMediaQuery";
+import { styled } from "@mui/material/styles";
 
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -22,7 +23,6 @@ import AddCommentOutlinedIcon from "@mui/icons-material/AddCommentOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import PlaylistAddOutlinedIcon from "@mui/icons-material/PlaylistAddOutlined";
 
-import Header from "../Header";
 import ErrorBox from "../ErrorBox";
 import ListsPopup from "../ListsPopup";
 
@@ -39,9 +39,6 @@ const BlogContainer = styled(Grid)(({ theme }) => ({
   },
   "& .para": {
     margin: "15px 0",
-  },
-  [theme.breakpoints.down("sm")]: {
-    padding: "10px",
   },
 }));
 
@@ -71,12 +68,8 @@ const Blog = () => {
 
   const token = useSelector((state) => state.token);
   const myId = useSelector((state) => state.id);
-  const dispatch = useDispatch();
 
   const id = useParams().id;
-
-  const theme = useTheme();
-  const sm = useMediaQuery(theme.breakpoints.down("sm"));
 
   const fetchBlog = (skip) => {
     fetch(
@@ -229,7 +222,7 @@ const Blog = () => {
     <Grid
       container
       spacing={3}
-      sx={{ padding: "40px 20px 20px 20px" }}
+      sx={{ padding: { xs: "20px 10px 30px 10px", sm: "40px 20px 50px 20px" } }}
       justifyContent="center"
     >
       <ListsPopup
@@ -247,21 +240,28 @@ const Blog = () => {
           <img src={blog.image} />
         </Box>
         {blog.content.split("\n").map((para, i) => (
-          <Typography variant="body1" key={i} className="para">
+          <Typography key={i} variant="body1" className="para">
             {para}
           </Typography>
         ))}
         <Stack
-          direction="row"
-          alignItems="center"
+          direction={{ xs: "column", sm: "row" }}
+          alignItems={{ xs: "stretch", sm: "center" }}
+          justifyContent="space-between"
+          spacing={2}
           sx={{
             marginTop: "40px",
-            marginBottom: "80px",
+            marginBottom: { xs: "40px", sm: "80px" },
             paddingTop: "10px",
             borderTop: "solid 2px #ffc9b5aa",
           }}
         >
-          <Stack direction="column">
+          <Stack
+            direction="column"
+            alignItems={{ xs: "center", sm: "flex-start" }}
+            spacing={1}
+            flexWrap="wrap"
+          >
             <Typography
               variant="h4"
               color="secondary"
@@ -276,65 +276,60 @@ const Blog = () => {
                 {blog.created_at.slice(2, 10).split("-").reverse().join("/")}
               </Typography>
 
-              {sm ? (
-                <></>
-              ) : (
-                <Typography variant="body2" color="secondary">
-                  {blog.topics[0].name}
-                </Typography>
-              )}
-              <Typography variant="body2">{blog.views_count} views</Typography>
-            </Stack>
-            {sm ? (
               <Typography variant="body2" color="secondary">
                 {blog.topics[0].name}
               </Typography>
+
+              <Typography variant="body2">{blog.views_count} views</Typography>
+            </Stack>
+          </Stack>
+          <Stack direction="row" justifyContent="center" alignItems="center">
+            {token != "" ? (
+              <>
+                {blog.user_details.id == myId ? (
+                  <IconButton
+                    disableRipple
+                    component={Link}
+                    to={`/editor/${blog.id}`}
+                  >
+                    <EditIcon fontSize="large" color="secondary" />
+                  </IconButton>
+                ) : (
+                  <>
+                    <Typography variant="body2">{blog.likes_count}</Typography>
+                    <IconButton disableRipple onClick={like}>
+                      {isLiked ? (
+                        <FavoriteIcon fontSize="large" color="secondary" />
+                      ) : (
+                        <FavoriteBorderIcon
+                          fontSize="large"
+                          color="secondary"
+                        />
+                      )}
+                    </IconButton>
+                    <IconButton disableRipple onClick={bookmark}>
+                      {bookmarkId < 0 ? (
+                        <BookmarkBorderIcon
+                          fontSize="large"
+                          color="secondary"
+                        />
+                      ) : (
+                        <BookmarkIcon fontSize="large" color="secondary" />
+                      )}
+                    </IconButton>
+                    <IconButton disableRipple onClick={() => setPopup(true)}>
+                      <PlaylistAddOutlinedIcon
+                        fontSize="large"
+                        color="secondary"
+                      />
+                    </IconButton>
+                  </>
+                )}
+              </>
             ) : (
               <></>
             )}
           </Stack>
-          <span style={{ flex: 1 }} />
-          {token != "" ? (
-            <>
-              {blog.user_details.id == myId ? (
-                <IconButton
-                  disableRipple
-                  component={Link}
-                  to={`/editor/${blog.id}`}
-                >
-                  <EditIcon fontSize="large" color="secondary" />
-                </IconButton>
-              ) : (
-                <>
-                  <Typography variant="body2" sx={{ marginLeft: "10px" }}>
-                    {blog.likes_count}
-                  </Typography>
-                  <IconButton disableRipple onClick={like}>
-                    {isLiked ? (
-                      <FavoriteIcon fontSize="large" color="secondary" />
-                    ) : (
-                      <FavoriteBorderIcon fontSize="large" color="secondary" />
-                    )}
-                  </IconButton>
-                  <IconButton disableRipple onClick={bookmark}>
-                    {bookmarkId < 0 ? (
-                      <BookmarkBorderIcon fontSize="large" color="secondary" />
-                    ) : (
-                      <BookmarkIcon fontSize="large" color="secondary" />
-                    )}
-                  </IconButton>
-                  <IconButton disableRipple onClick={() => setPopup(true)}>
-                    <PlaylistAddOutlinedIcon
-                      fontSize="large"
-                      color="secondary"
-                    />
-                  </IconButton>
-                </>
-              )}
-            </>
-          ) : (
-            <></>
-          )}
         </Stack>
       </BlogContainer>
       <CommentsContainer item xs={12} lg={4}>
@@ -372,7 +367,12 @@ const Blog = () => {
             {blog.comments_count == 1 ? "" : "s"}
           </Typography>
           {blog.comments.map((comment, i) => (
-            <CommentCard direction="row" justifyContent="center" spacing={2}>
+            <CommentCard
+              key={i}
+              direction="row"
+              justifyContent="center"
+              spacing={2}
+            >
               <Box className="image-box" flexGrow={1}>
                 <img src={comment.user_details.pfp} />
               </Box>
